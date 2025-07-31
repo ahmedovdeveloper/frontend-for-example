@@ -286,7 +286,7 @@ const Basket = () => {
                           {item.name}
                         </h3>
                         <p className="text-gray-600 text-sm mb-3 font-light">
-                         {item.variants?.[0]?.name  }
+                         {item.variants?.[0]?.name}
                         </p>
                         <div className="flex items-center space-x-2 mb-4">
                           <span className="text-sm text-gray-500">Цвет:</span>
