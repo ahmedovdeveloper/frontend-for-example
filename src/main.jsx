@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         element: <ProductView />,
       },
       {
-        path: '/create-product',
+        path: '/product/create',
         element: <ProductCreate />,
       },
 ]);
@@ -39,3 +39,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
+
+// changeds 
