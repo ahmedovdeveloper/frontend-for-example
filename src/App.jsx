@@ -7,6 +7,9 @@ import FAQ from './componentns/Faq'
 import Blog from './componentns/Blog'
 // import SunglassesLanding from './componentns/SunglassesLanding'
 const App = () => {
+ 
+    localStorage.setItem("cartItems", JSON.stringify([]));
+
   return (
    <>
     <Header/>
