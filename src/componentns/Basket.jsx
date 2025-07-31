@@ -5,16 +5,45 @@ import Header from './Header';
 const Basket = () => {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('cartItems');
-    if (savedCart) {
-      const items = JSON.parse(savedCart);
-      // Ensure all items have required fields
-      return items.map(item => ({
-        ...item,
-        images: Array.isArray(item.images) ? item.images : [],
-      }));
-    }
-    console.log('No cart items found in localStorage, initializing empty cart');
-    return []; // Default to empty array if no saved cart
+    let items = savedCart
+      ? JSON.parse(savedCart)
+      : [
+          {
+            id: 1,
+            name: 'H1 Roland',
+            variant: 'Black/Black',
+            price: 15900,
+            originalPrice: 19900,
+            quantity: 1,
+            selectedColor: '#000000',
+            images: ['https://picsum.photos/400/400?random=1'],
+          },
+          {
+            id: 3,
+            name: 'H1A Chelsea',
+            variant: 'Tortoise/Blue',
+            price: 16700,
+            quantity: 2,
+            selectedColor: '#8B4513',
+            images: ['https://picsum.photos/400/400?random=3'],
+          },
+          {
+            id: 6,
+            name: 'H5 Venice',
+            variant: 'Rose Gold',
+            price: 19800,
+            quantity: 1,
+            selectedColor: '#E8B4A0',
+            images: ['https://picsum.photos/400/400?random=6'],
+          },
+        ];
+    // Ensure all items have an images array
+    items = items.map(item => ({
+      ...item,
+      images: Array.isArray(item.images) ? item.images : [],
+    }));
+    console.log('Cart items loaded from localStorage:', items);
+    return items;
   });
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
@@ -100,7 +129,8 @@ const Basket = () => {
       return;
     }
 
-    const phoneRegex = /^\+?\d[\d\s-]{6,}\d$/;
+    // Validate phone number
+    const phoneRegex = /^\+?\d[\d\s-]{6,}\d$/; // Allows + followed by digits, spaces, or dashes, at least 7 digits
     if (!phoneRegex.test(phoneNumber.replace(/\s/g, ''))) {
       alert('Пожалуйста, введите действительный номер телефона (например, +998901234567 или 998 90 123 45 67)');
       return;
@@ -120,6 +150,7 @@ const Basket = () => {
       }
       console.log('Bot connected to chat:', await testResponse.json());
 
+      // Send order summary message first
       const orderSummary = `Новый заказ:\n\nКлиент: ${customerName}\nТелефон: ${phoneNumber}\n\nПодытог: uzs: ${subtotal.toLocaleString()}\nСкидка: uzs: ${discount.toLocaleString()}\nИтого: uzs: ${total.toLocaleString()}`;
       const summaryResponse = await fetch(
         `https://api.telegram.org/bot${botToken}/sendMessage`,
@@ -138,11 +169,10 @@ const Basket = () => {
       }
       console.log('Summary sent successfully:', await summaryResponse.json());
 
+      // Send each product individually with its image, customer data, and details
       for (const item of cartItems) {
         const itemMessage = `Новый заказ:\n\nКлиент: ${customerName}\nТелефон: ${phoneNumber}\n\nТовар: ${item.name}\nВариант: ${item.variant}\nКоличество: ${item.quantity}\nЦена за единицу: uzs: ${item.price.toLocaleString()}\nОбщая цена: uzs: ${(item.price * item.quantity).toLocaleString()}`;
-        const photoUrl = item.images && item.images.length > 0 
-          ? item.images[0] 
-          : 'https://picsum.photos/400/400';
+        const photoUrl = `https://backend-2y5w.onrender.com/uploads/${item.image[0] || 'default.jpg'}`;
         console.log(`Sending photo for item: ${item.name}, imageUrl: ${photoUrl}`);
         const photoResponse = await fetch(
           `https://api.telegram.org/bot${botToken}/sendPhoto`,
@@ -159,6 +189,7 @@ const Basket = () => {
 
         if (!photoResponse.ok) {
           console.warn(`Failed to send photo for ${item.name}: ${await photoResponse.text()}`);
+          // Send message without photo as fallback
           const messageResponse = await fetch(
             `https://api.telegram.org/bot${botToken}/sendMessage`,
             {
@@ -232,6 +263,7 @@ const Basket = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               {cartItems.map((item) => {
+                console.log('Rendering cart item:', item);
                 const imageSrc = item.images && item.images.length > 0 
                   ? (imageErrors[item.id] ? item.images[0] : `https://backend-2y5w.onrender.com/uploads/${item.images[0]}`)
                   : 'https://picsum.photos/400/400';
@@ -243,7 +275,7 @@ const Basket = () => {
                     <div className="flex items-center space-x-6">
                       <div className="w-36 h-36 rounded-lg overflow-hidden relative">
                         <img
-                          src={imageSrc}
+                          src={`https://backend-2y5w.onrender.com/uploads/${item.image[0]}`}
                           alt={item.name}
                           className="w-full h-full object-cover transition-opacity duration-300"
                           onError={() => handleImageError(item.id)}
@@ -254,7 +286,7 @@ const Basket = () => {
                           {item.name}
                         </h3>
                         <p className="text-gray-600 text-sm mb-3 font-light">
-                          {item.variant}
+                         {item.variants?.[0]?.name  }
                         </p>
                         <div className="flex items-center space-x-2 mb-4">
                           <span className="text-sm text-gray-500">Цвет:</span>
@@ -396,13 +428,13 @@ const Basket = () => {
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600 text-lg font-light">
                       <span>Скидка:</span>
-                      <span>uzs: ${discount.toLocaleString()}</span>
+                      <span>uzs:{discount.toLocaleString()}</span>
                     </div>
                   )}
                 </div>
                 <div className="flex justify-between text-xl font-light text-gray-900 mb-8">
                   <span>Итого:</span>
-                  <span>uzs: ${total.toLocaleString()}</span>
+                  <span>uzs:{total.toLocaleString()}</span>
                 </div>
                 <button
                   onClick={openModal}
