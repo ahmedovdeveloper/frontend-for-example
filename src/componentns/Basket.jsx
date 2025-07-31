@@ -37,7 +37,6 @@ const Basket = () => {
             images: ['https://picsum.photos/400/400?random=6'],
           },
         ];
-    // Ensure all items have an images array
     items = items.map(item => ({
       ...item,
       images: Array.isArray(item.images) ? item.images : [],
@@ -129,8 +128,7 @@ const Basket = () => {
       return;
     }
 
-    // Validate phone number
-    const phoneRegex = /^\+?\d[\d\s-]{6,}\d$/; // Allows + followed by digits, spaces, or dashes, at least 7 digits
+    const phoneRegex = /^\+?\d[\d\s-]{6,}\d$/;
     if (!phoneRegex.test(phoneNumber.replace(/\s/g, ''))) {
       alert('Пожалуйста, введите действительный номер телефона (например, +998901234567 или 998 90 123 45 67)');
       return;
@@ -150,7 +148,6 @@ const Basket = () => {
       }
       console.log('Bot connected to chat:', await testResponse.json());
 
-      // Send order summary message first
       const orderSummary = `Новый заказ:\n\nКлиент: ${customerName}\nТелефон: ${phoneNumber}\n\nПодытог: uzs: ${subtotal.toLocaleString()}\nСкидка: uzs: ${discount.toLocaleString()}\nИтого: uzs: ${total.toLocaleString()}`;
       const summaryResponse = await fetch(
         `https://api.telegram.org/bot${botToken}/sendMessage`,
@@ -169,7 +166,6 @@ const Basket = () => {
       }
       console.log('Summary sent successfully:', await summaryResponse.json());
 
-      // Send each product individually with its image, customer data, and details
       for (const item of cartItems) {
         const itemMessage = `Новый заказ:\n\nКлиент: ${customerName}\nТелефон: ${phoneNumber}\n\nТовар: ${item.name}\nВариант: ${item.variant}\nКоличество: ${item.quantity}\nЦена за единицу: uzs: ${item.price.toLocaleString()}\nОбщая цена: uzs: ${(item.price * item.quantity).toLocaleString()}`;
         const photoUrl = `https://backend-2y5w.onrender.com/uploads/${item.image[0] || 'default.jpg'}`;
@@ -189,7 +185,6 @@ const Basket = () => {
 
         if (!photoResponse.ok) {
           console.warn(`Failed to send photo for ${item.name}: ${await photoResponse.text()}`);
-          // Send message without photo as fallback
           const messageResponse = await fetch(
             `https://api.telegram.org/bot${botToken}/sendMessage`,
             {
@@ -227,13 +222,15 @@ const Basket = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
-      <div className="container mx-auto px-6 py-12 max-w-7xl">
-        <h1 className="text-4xl font-light text-gray-900 mb-8 tracking-tight animate-fade-in">Корзина</h1>
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 mb-6 sm:mb-8 tracking-tight animate-fade-in">
+          Корзина
+        </h1>
         {cartItems.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-xl shadow-md animate-fade-in">
-            <div className="text-gray-400 mb-6">
+          <div className="text-center py-12 sm:py-16 bg-white rounded-xl shadow-md animate-fade-in">
+            <div className="text-gray-400 mb-4 sm:mb-6">
               <svg
-                className="w-24 h-24 mx-auto"
+                className="w-16 h-16 sm:w-24 sm:h-24 mx-auto"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -246,34 +243,31 @@ const Basket = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-2xl font-light text-gray-900 mb-4 tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-light text-gray-900 mb-3 sm:mb-4 tracking-tight">
               Ваша корзина пуста
             </h3>
-            <p className="text-gray-600 font-light mb-8">
+            <p className="text-gray-600 font-light mb-6 sm:mb-8 text-sm sm:text-base">
               Добавьте товары из коллекции, чтобы оформить заказ
             </p>
             <Link
               to="/catalog"
-              className="bg-gradient-to-r from-gray-900 to-gray-700 text-white px-8 py-3 rounded-lg font-light tracking-wide uppercase text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 shadow-md hover:shadow-lg"
+              className="bg-gradient-to-r from-gray-900 to-gray-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-light tracking-wide uppercase text-xs sm:text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 shadow-md hover:shadow-lg"
             >
               Перейти в каталог
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {cartItems.map((item) => {
                 console.log('Rendering cart item:', item);
-                const imageSrc = item.images && item.images.length > 0 
-                  ? (imageErrors[item.id] ? item.images[0] : `https://backend-2y5w.onrender.com/uploads/${item.images[0]}`)
-                  : 'https://picsum.photos/400/400';
                 return (
                   <div
                     key={item.id}
-                    className="bg-white border border-gray-200 rounded-xl p-6"
+                    className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6"
                   >
-                    <div className="flex items-center space-x-6">
-                      <div className="w-36 h-36 rounded-lg overflow-hidden relative">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                      <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-lg overflow-hidden relative flex-shrink-0">
                         <img
                           src={`https://backend-2y5w.onrender.com/uploads/${item.image[0]}`}
                           alt={item.name}
@@ -281,39 +275,39 @@ const Basket = () => {
                           onError={() => handleImageError(item.id)}
                         />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-light text-xl text-gray-900 mb-2 tracking-tight">
+                      <div className="flex-1 w-full">
+                        <h3 className="font-light text-lg sm:text-xl text-gray-900 mb-2 tracking-tight">
                           {item.name}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-3 font-light">
-                         {item.variants?.[0]?.name}
+                        <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 font-light">
+                          {item.variant}
                         </p>
-                        <div className="flex items-center space-x-2 mb-4">
-                          <span className="text-sm text-gray-500">Цвет:</span>
+                        <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+                          <span className="text-xs sm:text-sm text-gray-500">Цвет:</span>
                           <div
-                            className="w-5 h-5 rounded-full border border-gray-300"
+                            className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-gray-300"
                             style={{ backgroundColor: item.selectedColor }}
                           ></div>
                         </div>
-                        <div className="flex items-center space-x-3">
-                          <span className="text-xl font-light text-gray-900">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                          <span className="text-lg sm:text-xl font-light text-gray-900">
                             uzs: {item.price.toLocaleString()}
                           </span>
                           {item.originalPrice && (
-                            <span className="text-sm text-gray-500 line-through">
+                            <span className="text-xs sm:text-sm text-gray-500 line-through">
                               uzs: {item.originalPrice.toLocaleString()}
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-3 bg-gray-100 rounded-lg p-2">
+                      <div className="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto justify-between sm:justify-start">
+                        <div className="flex items-center space-x-2 sm:space-x-3 bg-gray-100 rounded-lg p-1 sm:p-2">
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-gray-300 transition-colors duration-200"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white border border-gray-300 transition-colors duration-200"
                           >
                             <svg
-                              className="w-5 h-5"
+                              className="w-4 h-4 sm:w-5 sm:h-5"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -326,15 +320,15 @@ const Basket = () => {
                               />
                             </svg>
                           </button>
-                          <span className="text-lg font-light min-w-[2rem] text-center">
+                          <span className="text-base sm:text-lg font-light min-w-[1.5rem] sm:min-w-[2rem] text-center">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-gray-300 transition-colors duration-200"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white border border-gray-300 transition-colors duration-200"
                           >
                             <svg
-                              className="w-5 h-5"
+                              className="w-4 h-4 sm:w-5 sm:h-5"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -353,7 +347,7 @@ const Basket = () => {
                           className="text-gray-400 hover:text-red-500 transition-colors duration-200"
                         >
                           <svg
-                            className="w-6 h-6"
+                            className="w-5 h-5 sm:w-6 sm:h-6"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -373,38 +367,38 @@ const Basket = () => {
               })}
             </div>
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl p-8 shadow-lg sticky top-24 animate-fade-in">
-                <h2 className="text-2xl font-light text-gray-900 mb-6 tracking-tight">
+              <div className="bg-white rounded-xl p-6 sm:p-8 shadow-lg sticky top-20 animate-fade-in">
+                <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-4 sm:mb-6 tracking-tight">
                   Итог заказа
                 </h2>
-                <div className="mb-8">
-                  <label className="block text-sm font-light text-gray-700 mb-3">
+                <div className="mb-6 sm:mb-8">
+                  <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2 sm:mb-3">
                     Промокод
                   </label>
-                  <div className="flex space-x-3">
+                  <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                     <input
                       type="text"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                       placeholder="Введите код"
-                      className="flex-1 border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
+                      className="flex-1 border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
                     />
                     <button
                       onClick={applyPromoCode}
-                      className="bg-gradient-to-r from-gray-900 to-gray-700 text-white px-5 py-3 rounded-lg text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 shadow-md hover:shadow-lg"
+                      className="bg-gradient-to-r from-gray-900 to-gray-700 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-lg text-xs sm:text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 shadow-md hover:shadow-lg"
                     >
                       Применить
                     </button>
                   </div>
                   {appliedPromo && (
-                    <div className="mt-3 flex items-center justify-between bg-green-100 text-green-800 px-4 py-2 rounded-lg text-sm animate-fade-in">
+                    <div className="mt-3 flex items-center justify-between bg-green-100 text-green-800 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm animate-fade-in">
                       <span>Промокод {appliedPromo.code} применен</span>
                       <button
                         onClick={removePromoCode}
                         className="text-green-600 hover:text-green-800 transition-colors duration-200"
                       >
                         <svg
-                          className="w-5 h-5"
+                          className="w-4 h-4 sm:w-5 sm:h-5"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -420,39 +414,39 @@ const Basket = () => {
                     </div>
                   )}
                 </div>
-                <div className="space-y-4 border-b border-gray-200 pb-6 mb-6">
-                  <div className="flex justify-between text-gray-700 text-lg font-light">
+                <div className="space-y-3 sm:space-y-4 border-b border-gray-200 pb-4 sm:pb-6 mb-4 sm:mb-6">
+                  <div className="flex justify-between text-gray-700 text-base sm:text-lg font-light">
                     <span>Подытог:</span>
                     <span>uzs: {subtotal.toLocaleString()}</span>
                   </div>
                   {discount > 0 && (
-                    <div className="flex justify-between text-green-600 text-lg font-light">
+                    <div className="flex justify-between text-green-600 text-base sm:text-lg font-light">
                       <span>Скидка:</span>
-                      <span>uzs:{discount.toLocaleString()}</span>
+                      <span>uzs: {discount.toLocaleString()}</span>
                     </div>
                   )}
                 </div>
-                <div className="flex justify-between text-xl font-light text-gray-900 mb-8">
+                <div className="flex justify-between text-lg sm:text-xl font-light text-gray-900 mb-6 sm:mb-8">
                   <span>Итого:</span>
-                  <span>uzs:{total.toLocaleString()}</span>
+                  <span>uzs: {total.toLocaleString()}</span>
                 </div>
                 <button
                   onClick={openModal}
                   disabled={isCheckingOut}
-                  className="w-full bg-gradient-to-r from-gray-900 to-gray-700 text-white py-4 rounded-lg font-light tracking-wide uppercase text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                  className="w-full bg-gradient-to-r from-gray-900 to-gray-700 text-white py-3 sm:py-4 rounded-lg font-light tracking-wide uppercase text-xs sm:text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                 >
                   {isCheckingOut ? (
-                    <div className="flex items-center justify-center space-x-3">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                       <span>Оформление...</span>
                     </div>
                   ) : (
                     'Оформить заказ'
                   )}
                 </button>
-                <div className="mt-6 flex items-center justify-center space-x-3 text-sm text-gray-500">
+                <div className="mt-4 sm:mt-6 flex items-center justify-center space-x-2 sm:space-x-3 text-xs sm:text-sm text-gray-500">
                   <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 sm:w-5 sm:h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -473,14 +467,14 @@ const Basket = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 max-w-md w-full">
-            <h2 className="text-2xl font-light text-gray-900 mb-6 tracking-tight">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-xl p-6 sm:p-8 max-w-sm sm:max-w-md w-full">
+            <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-4 sm:mb-6 tracking-tight">
               Контактные данные
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-light text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2">
                   Имя
                 </label>
                 <input
@@ -488,11 +482,11 @@ const Basket = () => {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="Введите ваше имя"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
+                  className="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
                 />
               </div>
               <div>
-                <label className="block text-sm font-light text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2">
                   Номер телефона
                 </label>
                 <input
@@ -500,25 +494,25 @@ const Basket = () => {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Введите номер телефона (например, +998901234567)"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
+                  className="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
                 />
               </div>
             </div>
-            <div className="mt-6 flex space-x-4">
+            <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
               <button
                 onClick={closeModal}
-                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-light tracking-wide uppercase text-sm hover:bg-gray-300 transition-all duration-300"
+                className="flex-1 bg-gray-200 text-gray-700 py-2 sm:py-3 rounded-lg font-light tracking-wide uppercase text-xs sm:text-sm hover:bg-gray-300 transition-all duration-300"
               >
                 Отмена
               </button>
               <button
                 onClick={handleCheckout}
                 disabled={isCheckingOut || !phoneNumber || !customerName}
-                className="flex-1 bg-gradient-to-r from-gray-900 to-gray-700 text-white py-3 rounded-lg font-light tracking-wide uppercase text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="flex-1 bg-gradient-to-r from-gray-900 to-gray-700 text-white py-2 sm:py-3 rounded-lg font-light tracking-wide uppercase text-xs sm:text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {isCheckingOut ? (
-                  <div className="flex items-center justify-center space-x-3">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     <span>Оформление...</span>
                   </div>
                 ) : (
