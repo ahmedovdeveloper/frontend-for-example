@@ -14,9 +14,9 @@ const Blog = () => {
         return response.json();
       })
       .then(data => {
-        // Map the API response to match the photos structure
+        console.log(data)
         const formattedPhotos = data.map(image => ({
-          src: `https://backend-2y5w.onrender.com/${image.url}`,
+          src: `https://backend-2y5w.onrender.com${image.url}`, // Full URL to the image
         }));
         setPhotos(formattedPhotos);
       })
