@@ -17,6 +17,10 @@ const router = createBrowserRouter([
     element:<App/>,
   },
   {
+     path: '/product/create',
+     element: <ProductCreate />,
+  },
+  {
     path: "/catalog",
     element: <Catalog/>
   },
@@ -28,10 +32,7 @@ const router = createBrowserRouter([
         path: '/product/:id',
         element: <ProductView />,
       },
-      {
-        path: '/product/create',
-        element: <ProductCreate />,
-      },
+      
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
