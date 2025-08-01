@@ -17,8 +17,9 @@ const App = () => {
     <main>
       <PromotionalBanner/>
     <ProductCards/>
-    <FAQ/>
     <Video/>
+
+    <FAQ/>
     {/* <SunglassesLanding/> */}
     <Blog/>
     </main>
