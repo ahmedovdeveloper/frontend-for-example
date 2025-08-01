@@ -1,5 +1,5 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+  "redirects": [
+    { "source": "/(.*)", "destination": "https://mihlievs.uz/$1", "has": [{ "type": "host", "value": "www.mihlievs.uz" }], "statusCode": 301 }
   ]
 }
