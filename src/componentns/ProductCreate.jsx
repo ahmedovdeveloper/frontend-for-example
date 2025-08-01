@@ -106,7 +106,7 @@ const ProductCreate = () => {
     console.log('FormData contents:', [...formDataToSend.entries()]);
 
     try {
-      const response = await axios.post('https://backend-2y5w.onrender.com/api/products', formDataToSend, {
+      const response = await axios.post('https://backend-production-79eb.up.railway.app/api/products', formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       alert('Продукт успешно создан!');

@@ -168,7 +168,7 @@ const Basket = () => {
 
       for (const item of cartItems) {
         const itemMessage = `Новый заказ:\n\nКлиент: ${customerName}\nТелефон: ${phoneNumber}\n\nТовар: ${item.name}\nВариант: ${item.variant}\nКоличество: ${item.quantity}\nЦена за единицу: uzs: ${item.price.toLocaleString()}\nОбщая цена: uzs: ${(item.price * item.quantity).toLocaleString()}`;
-        const photoUrl = `https://backend-2y5w.onrender.com/uploads/${item.image[0] || 'default.jpg'}`;
+        const photoUrl = `https://backend-production-79eb.up.railway.app/uploads/${item.image[0] || 'default.jpg'}`;
         console.log(`Sending photo for item: ${item.name}, imageUrl: ${photoUrl}`);
         const photoResponse = await fetch(
           `https://api.telegram.org/bot${botToken}/sendPhoto`,
@@ -269,7 +269,7 @@ const Basket = () => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                       <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-lg overflow-hidden relative flex-shrink-0">
                         <img
-                          src={`https://backend-2y5w.onrender.com/uploads/${item.image[0]}`}
+                          src={`https://backend-production-79eb.up.railway.app/uploads/${item.image[0]}`}
                           alt={item.name}
                           className="w-full h-full object-cover transition-opacity duration-300"
                           onError={() => handleImageError(item.id)}

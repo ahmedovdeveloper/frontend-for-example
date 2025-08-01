@@ -17,7 +17,7 @@ const ProductView = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://backend-2y5w.onrender.com/api/products/${id}`);
+        const response = await axios.get(`https://backend-production-79eb.up.railway.app/api/products/${id}`);
         console.log('API Response:', response.data);
         setProduct(response.data);
       } catch (err) {
@@ -76,7 +76,7 @@ const ProductView = () => {
             {/* Main Image */}
             <div className="aspect-square bg-gray-50 flex items-center justify-center p-12">
               <img
-                src={`https://backend-2y5w.onrender.com/uploads/${product.images[selectedImage]}`}
+                src={`https://backend-production-79eb.up.railway.app/uploads/${product.images[selectedImage]}`}
                 alt={`${product.name} - Image ${selectedImage + 1}`}
                 className="w-full h-full object-contain"
                 onError={(e) => {
@@ -97,7 +97,7 @@ const ProductView = () => {
                     }`}
                   >
                     <img
-                      src={`https://backend-2y5w.onrender.com/uploads/${image}`}
+                      src={`https://backend-production-79eb.up.railway.app/uploads/${image}`}
                       alt={`${product.name} thumbnail ${index + 1}`}
                       className="w-full h-full object-contain"
                     />

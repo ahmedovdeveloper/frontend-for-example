@@ -11,7 +11,7 @@ const ProductCards = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('https://backend-2y5w.onrender.com/api/products');
+        const response = await axios.get('https://backend-production-79eb.up.railway.app/api/products');
         console.log('API Response:', response.data);
         setProducts(response.data);
       } catch (err) {
@@ -86,7 +86,7 @@ const ProductCards = () => {
                 <div className="w-full h-full flex items-center justify-center p-8 relative">
                   {/* Первое изображение */}
                   <img
-                    src={`https://backend-2y5w.onrender.com/uploads/${product.images[0]}`}
+                    src={`https://backend-production-79eb.up.railway.app/uploads/${product.images[0]}`}
                     alt={`${product.name} - Image 1`}
                     className={`w-full h-full object-contain absolute inset-0 p-8 transition-opacity duration-700 ease-in-out ${
                       hoveredCard === (product._id || product.id) && product.images[1] 
@@ -100,7 +100,7 @@ const ProductCards = () => {
                   {/* Второе изображение (показывается при hover) */}
                   {product.images[1] && (
                     <img
-                      src={`https://backend-2y5w.onrender.com/uploads/${product.images[1]}`}
+                      src={`https://backend-production-79eb.up.railway.app/uploads/${product.images[1]}`}
                       alt={`${product.name} - Image 2`}
                       className={`w-full h-full object-contain absolute inset-0 p-8 transition-opacity duration-700 ease-in-out ${
                         hoveredCard === (product._id || product.id) 
