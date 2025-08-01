@@ -5,6 +5,7 @@ import ProductCards from './componentns/ProductCards'
 import Footer from './componentns/Footer'
 import FAQ from './componentns/Faq'
 import Blog from './componentns/Blog'
+import Video from './componentns/Video'
 // import SunglassesLanding from './componentns/SunglassesLanding'
 const App = () => {
  
@@ -17,6 +18,7 @@ const App = () => {
       <PromotionalBanner/>
     <ProductCards/>
     <FAQ/>
+    <Video/>
     {/* <SunglassesLanding/> */}
     <Blog/>
     </main>
