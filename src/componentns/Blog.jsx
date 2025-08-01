@@ -16,7 +16,7 @@ const Blog = () => {
       .then(data => {
         console.log(data)
         const formattedPhotos = data.map(image => ({
-          src: `https://backend-2y5w.onrender.com${image.url}`, // Full URL to the image
+          src: `https://backend-production-79eb.up.railway.app${image.url}`, // Full URL to the image
         }));
         setPhotos(formattedPhotos);
       })
