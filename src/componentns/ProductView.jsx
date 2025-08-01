@@ -118,7 +118,7 @@ const ProductView = () => {
                   {/* Previous Button */}
                   <button
                     onClick={goToPrevImage}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-100 hover:scale-110"
                     aria-label="Previous image"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,7 +129,7 @@ const ProductView = () => {
                   {/* Next Button */}
                   <button
                     onClick={goToNextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-100 hover:scale-110"
                     aria-label="Next image"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
