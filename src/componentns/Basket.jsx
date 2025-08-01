@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import DefualtHeader from './DefualtHeader';
 
 const Basket = () => {
   const [cartItems, setCartItems] = useState(() => {
@@ -221,7 +222,7 @@ const Basket = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <Header />
+      <DefualtHeader />
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-7xl">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 mb-6 sm:mb-8 tracking-tight animate-fade-in">
           Корзина

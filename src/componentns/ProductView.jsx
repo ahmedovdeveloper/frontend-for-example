@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import DefualtHeader from './DefualtHeader';
 
 const ProductView = () => {
   const { id } = useParams();
@@ -68,7 +69,7 @@ const ProductView = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <Header />
+      <DefualtHeader />
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Images Section */}

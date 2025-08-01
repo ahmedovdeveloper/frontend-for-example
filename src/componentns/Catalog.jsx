@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import DefualtHeader from './DefualtHeader';
 
 const Catalog = () => {
   const [sortBy, setSortBy] = useState('name');
@@ -77,7 +78,7 @@ const Catalog = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <Header />
+      <DefualtHeader />
       <div className="container mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Products Grid */}

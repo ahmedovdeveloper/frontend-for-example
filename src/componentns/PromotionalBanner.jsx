@@ -1,19 +1,27 @@
 import React from 'react';
-import IMG from "../assets/animation.mp4";
+import IMG from "../assets/2025-08-01 12.02.32.jpg";
+import imgResponsive from "../assets/IMG_3002.MOV";
 import { Link } from 'react-router-dom';
 
 const PromotionalBanner = () => {
     return (
         <section className="relative w-full h-[90vh] overflow-hidden">
-            {/* Фоновое видео */}
+            {/* Фоновое изображение для десктопа */}
+            <img 
+                src={IMG} 
+                alt="" 
+                className="hidden md:block absolute top-0 left-0 w-full h-full object-cover z-0"
+            />
+
+            {/* Фоновое видео для мобильных устройств */}
             <video
-                className="absolute top-0 left-0 w-full h-full object-cover z-0"
+                className="md:hidden absolute top-0 left-0 w-full h-full object-cover z-0"
                 autoPlay
                 loop
                 muted
                 playsInline
             >
-                <source src={IMG} type="video/mp4" />
+                <source src={imgResponsive} type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
 

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import DefualtHeader from './DefualtHeader';
 
 const ProductCreate = () => {
   const [formData, setFormData] = useState({
@@ -119,7 +120,7 @@ const ProductCreate = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <Header />
+      <DefualtHeader />
       <div className="container mx-auto px-6 py-12">
         <h2 className="text-2xl font-light text-gray-900 mb-6">Создать новый продукт</h2>
         {error && <div className="text-red-500 mb-4">{error}</div>}
