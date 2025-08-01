@@ -32,6 +32,33 @@ const ProductView = () => {
     fetchProduct();
   }, [id]);
 
+  // Navigation functions for image swiper
+  const goToNextImage = () => {
+    if (product && product.images.length > 0) {
+      setSelectedImage((prev) => (prev + 1) % product.images.length);
+    }
+  };
+
+  const goToPrevImage = () => {
+    if (product && product.images.length > 0) {
+      setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
+    }
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'ArrowRight') {
+        goToNextImage();
+      } else if (e.key === 'ArrowLeft') {
+        goToPrevImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [product]);
+
   if (loading) return <div className="text-center py-16">Загрузка...</div>;
   if (error || !product) return <div className="text-center py-16 text-red-500">Продукт не найден</div>;
 
@@ -74,8 +101,8 @@ const ProductView = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Images Section */}
           <div className="space-y-6">
-            {/* Main Image */}
-            <div className="aspect-square bg-gray-50 flex items-center justify-center p-12">
+            {/* Main Image with Navigation */}
+            <div className="aspect-square bg-gray-50 flex items-center justify-center p-12 relative group">
               <img
                 src={`https://backend-production-79eb.up.railway.app/uploads/${product.images[selectedImage]}`}
                 alt={`${product.name} - Image ${selectedImage + 1}`}
@@ -84,6 +111,38 @@ const ProductView = () => {
                   e.target.src = 'https://via.placeholder.com/600x600?text=Image+Not+Found';
                 }}
               />
+              
+              {/* Navigation Buttons - Only show if there are multiple images */}
+              {product.images.length > 1 && (
+                <>
+                  {/* Previous Button */}
+                  <button
+                    onClick={goToPrevImage}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
+                    aria-label="Previous image"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Next Button */}
+                  <button
+                    onClick={goToNextImage}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110"
+                    aria-label="Next image"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  {/* Image Counter */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+                    {selectedImage + 1} / {product.images.length}
+                  </div>
+                </>
+              )}
             </div>
             
             {/* Thumbnail Images */}
@@ -106,6 +165,13 @@ const ProductView = () => {
                 ))}
               </div>
             )}
+
+            {/* Navigation Instructions */}
+            {product.images.length > 1 && (
+              <div className="text-center text-gray-500 text-sm">
+                Use arrow keys or click buttons to navigate images
+              </div>
+            )}
           </div>
 
           {/* Product Info Section */}
@@ -120,16 +186,12 @@ const ProductView = () => {
               </p>
             </div>
 
-          
-
             {/* Frame & Lens Info */}
             <div className="border-t border-gray-200 pt-6">
               <p className="text-gray-600 text-sm">
                 Frame: Black / Lenses: Black
               </p>
             </div>
-
-          
 
             {/* Features */}
             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-gray-200">
@@ -176,7 +238,7 @@ const ProductView = () => {
             <div className="pt-4">
               <button
                 onClick={addToCart}
-              className="border border-gray-900 text-gray-900 px-8 py-3 font-light tracking-wide uppercase text-sm hover:bg-gray-900 hover:text-white transition-all duration-300"
+                className="border border-gray-900 text-gray-900 px-8 py-3 font-light tracking-wide uppercase text-sm hover:bg-gray-900 hover:text-white transition-all duration-300"
               >
                 ДОБАВИТЬ В КОРЗИНУ
               </button>
