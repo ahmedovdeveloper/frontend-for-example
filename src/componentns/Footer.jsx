@@ -1,8 +1,6 @@
 import React from 'react'
 import Logo from "../assets/logo.jpg";
 
-// changes 
-import { FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
     return (
@@ -21,7 +19,6 @@ const Footer = () => {
                             rel="noopener noreferrer"
                             className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition duration-300"
                         >
-                            <FaInstagram className="text-white w-5 h-5" />
                         </a>
                     </div>
                 </div>
