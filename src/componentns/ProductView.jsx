@@ -1,5 +1,5 @@
 // src/components/ProductView.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -13,6 +13,13 @@ const ProductView = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
   const navigate = useNavigate();
+  
+  // Swipe and drag functionality
+  const imageContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [dragDistance, setDragDistance] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,6 +52,88 @@ const ProductView = () => {
     }
   };
 
+  // Mouse drag handlers
+  const handleMouseDown = (e) => {
+    if (product && product.images.length > 1) {
+      setIsDragging(true);
+      setStartX(e.clientX);
+      setStartY(e.clientY);
+      setDragDistance(0);
+      e.preventDefault();
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && product && product.images.length > 1) {
+      const currentX = e.clientX;
+      const currentY = e.clientY;
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+      
+      // Only consider horizontal movement if it's more significant than vertical
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        setDragDistance(deltaX);
+      }
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging && product && product.images.length > 1) {
+      const threshold = 50; // Minimum distance to trigger image change
+      
+      if (Math.abs(dragDistance) > threshold) {
+        if (dragDistance > 0) {
+          goToPrevImage();
+        } else {
+          goToNextImage();
+        }
+      }
+      
+      setIsDragging(false);
+      setDragDistance(0);
+    }
+  };
+
+  // Touch/swipe handlers
+  const handleTouchStart = (e) => {
+    if (product && product.images.length > 1) {
+      const touch = e.touches[0];
+      setStartX(touch.clientX);
+      setStartY(touch.clientY);
+      setDragDistance(0);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (product && product.images.length > 1) {
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      
+      // Only consider horizontal movement if it's more significant than vertical
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        setDragDistance(deltaX);
+        e.preventDefault(); // Prevent scrolling when swiping horizontally
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (product && product.images.length > 1) {
+      const threshold = 50; // Minimum distance to trigger image change
+      
+      if (Math.abs(dragDistance) > threshold) {
+        if (dragDistance > 0) {
+          goToPrevImage();
+        } else {
+          goToNextImage();
+        }
+      }
+      
+      setDragDistance(0);
+    }
+  };
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -58,6 +147,22 @@ const ProductView = () => {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [product]);
+
+  // Mouse event listeners
+  useEffect(() => {
+    const handleGlobalMouseMove = (e) => handleMouseMove(e);
+    const handleGlobalMouseUp = () => handleMouseUp();
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging, dragDistance, startX, startY]);
 
   if (loading) return <div className="text-center py-16">Загрузка...</div>;
   if (error || !product) return <div className="text-center py-16 text-red-500">Продукт не найден</div>;
@@ -101,47 +206,33 @@ const ProductView = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Images Section */}
           <div className="space-y-6">
-            {/* Main Image with Navigation */}
-            <div className="aspect-square bg-gray-50 flex items-center justify-center p-12 relative group">
+            {/* Main Image with Swipe/Drag */}
+            <div 
+              ref={imageContainerRef}
+              className="aspect-square bg-gray-50 flex items-center justify-center p-12 relative cursor-grab active:cursor-grabbing select-none"
+              onMouseDown={handleMouseDown}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{
+                transform: isDragging ? `translateX(${dragDistance * 0.1}px)` : 'none',
+                transition: isDragging ? 'none' : 'transform 0.3s ease'
+              }}
+            >
               <img
                 src={`https://backend-production-79eb.up.railway.app/uploads/${product.images[selectedImage]}`}
                 alt={`${product.name} - Image ${selectedImage + 1}`}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain pointer-events-none"
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/600x600?text=Image+Not+Found';
                 }}
               />
               
-              {/* Navigation Buttons - Only show if there are multiple images */}
+              {/* Image Counter - Only show if there are multiple images */}
               {product.images.length > 1 && (
-                <>
-                  {/* Previous Button */}
-                  <button
-                    onClick={goToPrevImage}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-100 hover:scale-110"
-                    aria-label="Previous image"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-
-                  {/* Next Button */}
-                  <button
-                    onClick={goToNextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 bg-opacity-100 text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-100 hover:scale-110"
-                    aria-label="Next image"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-
-                  {/* Image Counter */}
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
-                    {selectedImage + 1} / {product.images.length}
-                  </div>
-                </>
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+                  {selectedImage + 1} / {product.images.length}
+                </div>
               )}
             </div>
             
@@ -169,7 +260,7 @@ const ProductView = () => {
             {/* Navigation Instructions */}
             {product.images.length > 1 && (
               <div className="text-center text-gray-500 text-sm">
-                Use arrow keys or click buttons to navigate images
+                Swipe, drag, or use arrow keys to navigate images
               </div>
             )}
           </div>
