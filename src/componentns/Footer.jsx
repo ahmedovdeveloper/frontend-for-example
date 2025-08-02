@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaInstagram } from 'react-icons/fa';
 import Logo from '../assets/logo.jpg';
 
 const Footer = () => {
@@ -16,14 +15,14 @@ const Footer = () => {
             Премиальные очки для тех, кто ценит качество, стиль и комфорт.
             Создаем продукцию с пожизненной гарантией.
           </p>
-          <div className="flex justify-center space-x-4 mb-6">
+          <div className="mb-6">
             <a
               href="https://www.instagram.com/mihlievs/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition duration-300"
+              className="text-sm text-gray-400 underline hover:text-white transition"
             >
-              <FaInstagram className="text-white text-xl" />
+              Мы в Instagram
             </a>
           </div>
         </div>
