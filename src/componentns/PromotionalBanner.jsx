@@ -1,27 +1,20 @@
 import React from 'react';
-import IMG from "../assets/2025-08-01 12.02.32.jpg";
-import imgResponsive from "../assets/IMG_3002.MOV";
+import video from "../assets/bg_video.mp4";
 import { Link } from 'react-router-dom';
 
 const PromotionalBanner = () => {
     return (
         <section className="relative w-full h-[90vh] overflow-hidden">
-            {/* Фоновое изображение для десктопа */}
-            <img 
-                src={IMG} 
-                alt="" 
-                className="hidden md:block absolute top-0 left-0 w-full h-full object-cover z-0"
-            />
-
-            {/* Фоновое видео для мобильных устройств */}
+            {/* Фоновое видео (и для desktop, и для mobile) */}
             <video
-                className="md:hidden absolute top-0 left-0 w-full h-full object-cover z-0"
+                className="absolute top-0 left-0 w-full h-full object-cover z-0"
                 autoPlay
                 loop
                 muted
                 playsInline
+                poster={video} // запасное изображение, если видео не загрузится
             >
-                <source src={imgResponsive} type="video/mp4" />
+                <source src={video} type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
 
@@ -38,7 +31,10 @@ const PromotionalBanner = () => {
                         Discover premium eyewear crafted for clarity, comfort, and timeless style.
                     </p>
                     <div className="mt-8 flex justify-center gap-4 flex-wrap">
-                        <Link to="/catalog" className="bg-white text-gray-900 px-6 py-3 text-sm uppercase font-semibold hover:bg-gray-200 transition">
+                        <Link 
+                            to="/catalog" 
+                            className="bg-white text-gray-900 px-6 py-3 text-sm uppercase font-semibold hover:bg-gray-200 transition"
+                        >
                             Explore Collection
                         </Link>
                     </div>
