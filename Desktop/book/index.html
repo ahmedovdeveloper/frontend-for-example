@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            user-select: none;
+            position: relative;
+        }
+        #pdf-container {
+            width: 80vw;
+            height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            position: relative;
+            z-index: 10;
+        }
+        .blackout {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 100;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="blackout" class="blackout"></div>
+    <div id="pdf-container"></div>
+
+    <script>
+        document.addEventListener("contextmenu", (e) => e.preventDefault());
+        document.addEventListener("copy", (e) => e.preventDefault());
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "PrintScreen" || e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
+                document.getElementById("blackout").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("blackout").style.display = "none";
+                }, 3000);
+                e.preventDefault();
+            }
+        });
+        
+        let pdfUrl = "TREND Line by ANFA TC.pdf";
+        let pdfContainer = document.getElementById("pdf-container");
+
+        pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+            for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+                pdf.getPage(pageNumber).then(page => {
+                    let canvas = document.createElement("canvas");
+                    let ctx = canvas.getContext("2d");
+                    let viewport = page.getViewport({ scale: 1.5 });
+                    
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    pdfContainer.appendChild(canvas);
+                    
+                    let renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                });
+            }
+        });
+
+        async function detectScreenRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                document.getElementById("blackout").style.display = "block";
+                stream.getTracks().forEach(track => track.stop());
+            } catch (error) {
+                console.log("Screen recording not started.");
+            }
+        }
+
+        setInterval(detectScreenRecording, 3000);
+    </script>
+</body>
+</html>
