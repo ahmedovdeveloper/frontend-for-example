@@ -1,4 +1,3 @@
-// src/components/Basket.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
@@ -18,7 +17,7 @@ const Basket = () => {
             originalPrice: 19900,
             quantity: 1,
             selectedColor: '#000000',
-            images: ['default.jpg'],
+            images: ['https://picsum.photos/400/400?random=1'],
           },
           {
             id: 3,
@@ -27,7 +26,7 @@ const Basket = () => {
             price: 16700,
             quantity: 2,
             selectedColor: '#8B4513',
-            images: ['default.jpg'],
+            images: ['https://picsum.photos/400/400?random=3'],
           },
           {
             id: 6,
@@ -36,7 +35,7 @@ const Basket = () => {
             price: 19800,
             quantity: 1,
             selectedColor: '#E8B4A0',
-            images: ['default.jpg'],
+            images: ['https://picsum.photos/400/400?random=6'],
           },
         ];
     items = items.map(item => ({
@@ -46,7 +45,6 @@ const Basket = () => {
     console.log('Cart items loaded from localStorage:', items);
     return items;
   });
-
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -125,7 +123,6 @@ const Basket = () => {
     setCustomerName('');
   };
 
-  // --- FIXED: no photo sending, only text messages ---
   const handleCheckout = async () => {
     if (!phoneNumber || !customerName) {
       alert('Пожалуйста, заполните имя и номер телефона');
@@ -134,72 +131,26 @@ const Basket = () => {
 
     const phoneRegex = /^\+?\d[\d\s-]{6,}\d$/;
     if (!phoneRegex.test(phoneNumber.replace(/\s/g, ''))) {
-      alert('Пожалуйста, введите действительный номер телефона (например, +998901234567)');
+      alert('Пожалуйста, введите действительный номер телефона (например, +998901234567 или 998 90 123 45 67)');
       return;
     }
 
     setIsCheckingOut(true);
     try {
-      // Option A: Call your backend endpoint (recommended)
-      // Example: POST /api/send-order with order data.
-      // If you have backend, uncomment the fetch below and adapt URL.
-      /*
-      const serverResponse = await fetch('/api/send-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customerName,
-          phoneNumber,
-          cartItems,
-          subtotal,
-          discount,
-          total,
-        }),
-      });
-
-      if (!serverResponse.ok) {
-        throw new Error('Server failed to send Telegram message');
-      }
-      console.log('Order sent via backend:', await serverResponse.json());
-      */
-
-      // Option B: (Not recommended for production) Send from client using env vars.
-      // Be aware: exposing bot token in frontend is insecure.
       const botToken = '7525818901:AAHkfzPxjjLONzhcjjHyx_1QvS3t-jyq42w';
       const chatId = '-1002751674386';
 
-      if (!botToken || !chatId) {
-        // If you don't have bot token in client, fallback to client-side direct send is skipped.
-        // Inform user to use backend.
-        console.warn('No bot token/chat id in env. Please use backend to send messages.');
-        // Still clear cart and notify success locally:
-        alert('Заказ оформлен! Мы свяжемся с вами. (Telegram: настройте отправку на сервере)');
-        setCartItems([]);
-        setAppliedPromo(null);
-        closeModal();
-        return;
+      const testResponse = await fetch(
+        `https://api.telegram.org/bot${botToken}/getChat?chat_id=${chatId}`,
+        { method: 'GET' }
+      );
+      if (!testResponse.ok) {
+        throw new Error(`Bot cannot access chat: ${await testResponse.text()}`);
       }
+      console.log('Bot connected to chat:', await testResponse.json());
 
-      // Build text-only summary and itemized messages (no photos)
-      const orderSummary = [
-        `✅ *Новый заказ*`,
-        ``,
-        `*Клиент:* ${customerName}`,
-        `*Телефон:* ${phoneNumber}`,
-        ``,
-        `*Подытог:* uzs: ${subtotal.toLocaleString()}`,
-        `*Скидка:* uzs: ${discount.toLocaleString()}`,
-        `*Итого:* uzs: ${total.toLocaleString()}`,
-        ``,
-        `_Список товаров:_`,
-        ...cartItems.map(
-          (it, idx) =>
-            `${idx + 1}. ${it.name} — ${it.variant} — x${it.quantity} — uzs: ${(it.price * it.quantity).toLocaleString()}`
-        ),
-      ].join('\n');
-
-      // send single message (text only)
-      const sendResp = await fetch(
+      const orderSummary = `Новый заказ:\n\nКлиент: ${customerName}\nТелефон: ${phoneNumber}\n\nПодытог: uzs: ${subtotal.toLocaleString()}\nСкидка: uzs: ${discount.toLocaleString()}\nИтого: uzs: ${total.toLocaleString()}`;
+      const summaryResponse = await fetch(
         `https://api.telegram.org/bot${botToken}/sendMessage`,
         {
           method: 'POST',
@@ -207,23 +158,62 @@ const Basket = () => {
           body: JSON.stringify({
             chat_id: chatId,
             text: orderSummary,
-            parse_mode: 'Markdown',
           }),
         }
       );
 
-      if (!sendResp.ok) {
-        const errText = await sendResp.text();
-        throw new Error(`Telegram API error: ${errText}`);
+      if (!summaryResponse.ok) {
+        throw new Error(`Failed to send summary: ${await summaryResponse.text()}`);
+      }
+      console.log('Summary sent successfully:', await summaryResponse.json());
+
+      for (const item of cartItems) {
+        const itemMessage = `Новый заказ:\n\nКлиент: ${customerName}\nТелефон: ${phoneNumber}\n\nТовар: ${item.name}\nВариант: ${item.variant}\nКоличество: ${item.quantity}\nЦена за единицу: uzs: ${item.price.toLocaleString()}\nОбщая цена: uzs: ${(item.price * item.quantity).toLocaleString()}`;
+        const photoUrl = `https://backend-production-79eb.up.railway.app/uploads/${item.image[0] || 'default.jpg'}`;
+        console.log(`Sending photo for item: ${item.name}, imageUrl: ${photoUrl}`);
+        const photoResponse = await fetch(
+          `https://api.telegram.org/bot${botToken}/sendPhoto`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              photo: photoUrl,
+              caption: itemMessage,
+            }),
+          }
+        );
+
+        if (!photoResponse.ok) {
+          console.warn(`Failed to send photo for ${item.name}: ${await photoResponse.text()}`);
+          const messageResponse = await fetch(
+            `https://api.telegram.org/bot${botToken}/sendMessage`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: chatId,
+                text: itemMessage,
+              }),
+            }
+          );
+
+          if (!messageResponse.ok) {
+            console.warn(`Failed to send message for ${item.name}: ${await messageResponse.text()}`);
+          } else {
+            console.log(`Message sent successfully for ${item.name}:`, await messageResponse.json());
+          }
+        } else {
+          console.log(`Photo sent successfully for ${item.name}:`, await photoResponse.json());
+        }
       }
 
-      console.log('Order sent to Telegram (text only):', await sendResp.json());
       alert('Заказ оформлен! Спасибо за покупку! Информация отправлена в Telegram.');
       setCartItems([]);
       setAppliedPromo(null);
       closeModal();
     } catch (error) {
-      console.error('Error sending to Telegram:', error);
+      console.error('Error sending to Telegram:', error.message);
       alert(`Заказ оформлен, но произошла ошибка при отправке в Telegram: ${error.message}`);
     } finally {
       setIsCheckingOut(false);
@@ -237,9 +227,23 @@ const Basket = () => {
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 mb-6 sm:mb-8 tracking-tight animate-fade-in">
           Корзина
         </h1>
-
         {cartItems.length === 0 ? (
           <div className="text-center py-12 sm:py-16 bg-white rounded-xl shadow-md animate-fade-in">
+            <div className="text-gray-400 mb-4 sm:mb-6">
+              <svg
+                className="w-16 h-16 sm:w-24 sm:h-24 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 21h2m0 0h8m-8 0a2 2 0 104 0m6 0a2 2 0 100-4"
+                />
+              </svg>
+            </div>
             <h3 className="text-xl sm:text-2xl font-light text-gray-900 mb-3 sm:mb-4 tracking-tight">
               Ваша корзина пуста
             </h3>
@@ -257,6 +261,7 @@ const Basket = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {cartItems.map((item) => {
+                console.log(item)
                 console.log('Rendering cart item:', item);
                 return (
                   <div
@@ -266,7 +271,7 @@ const Basket = () => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                       <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-lg overflow-hidden relative flex-shrink-0">
                         <img
-                          src={`https://backend-production-79eb.up.railway.app/uploads/${item.images && item.images[0] ? item.images[0] : 'default.jpg'}`}
+                          src={`https://backend-production-79eb.up.railway.app/uploads/${item.image[0]}`}
                           alt={item.name}
                           className="w-full h-full object-cover transition-opacity duration-300"
                           onError={() => handleImageError(item.id)}
@@ -303,7 +308,19 @@ const Basket = () => {
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white border border-gray-300 transition-colors duration-200"
                           >
-                            -
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M20 12H4"
+                              />
+                            </svg>
                           </button>
                           <span className="text-base sm:text-lg font-light min-w-[1.5rem] sm:min-w-[2rem] text-center">
                             {item.quantity}
@@ -312,14 +329,38 @@ const Basket = () => {
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white border border-gray-300 transition-colors duration-200"
                           >
-                            +
+                            <svg
+                              className="w-4 h-4 sm:w-5 sm:h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                              />
+                            </svg>
                           </button>
                         </div>
                         <button
                           onClick={() => removeItem(item.id)}
                           className="text-gray-400 hover:text-red-500 transition-colors duration-200"
                         >
-                          Remove
+                          <svg
+                            className="w-5 h-5 sm:w-6 sm:h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
                         </button>
                       </div>
                     </div>
@@ -327,60 +368,100 @@ const Basket = () => {
                 );
               })}
             </div>
-
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl p-6 sm:p-8 shadow-lg sticky top-20 animate-fade-in">
                 <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-4 sm:mb-6 tracking-tight">
                   Итог заказа
                 </h2>
-
                 <div className="mb-6 sm:mb-8">
-                  <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2 sm:mb-3">Промокод</label>
+                  <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2 sm:mb-3">
+                    Промокод
+                  </label>
                   <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                     <input
                       type="text"
                       value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                       placeholder="Введите код"
                       className="flex-1 border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
                     />
-                    <button onClick={applyPromoCode} className="bg-gray-900 text-white px-4 py-2 rounded-lg text-xs">Применить</button>
+                    <button
+                      onClick={applyPromoCode}
+                      className="bg-gradient-to-r from-gray-900 to-gray-700 text-white px-4 sm:px-5 py-2 sm:py-3 rounded-lg text-xs sm:text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 shadow-md hover:shadow-lg"
+                    >
+                      Применить
+                    </button>
                   </div>
-
                   {appliedPromo && (
-                    <div className="mt-3 flex items-center justify-between bg-green-100 text-green-800 px-3 py-2 rounded-lg text-xs">
+                    <div className="mt-3 flex items-center justify-between bg-green-100 text-green-800 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm animate-fade-in">
                       <span>Промокод {appliedPromo.code} применен</span>
-                      <button onClick={removePromoCode} className="text-green-600">x</button>
+                      <button
+                        onClick={removePromoCode}
+                        className="text-green-600 hover:text-green-800 transition-colors duration-200"
+                      >
+                        <svg
+                          className="w-4 h-4 sm:w-5 sm:h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   )}
                 </div>
-
-                <div className="space-y-3 border-b border-gray-200 pb-4 mb-4">
-                  <div className="flex justify-between text-gray-700 text-base">
+                <div className="space-y-3 sm:space-y-4 border-b border-gray-200 pb-4 sm:pb-6 mb-4 sm:mb-6">
+                  <div className="flex justify-between text-gray-700 text-base sm:text-lg font-light">
                     <span>Подытог:</span>
                     <span>uzs: {subtotal.toLocaleString()}</span>
                   </div>
                   {discount > 0 && (
-                    <div className="flex justify-between text-green-600 text-base">
+                    <div className="flex justify-between text-green-600 text-base sm:text-lg font-light">
                       <span>Скидка:</span>
                       <span>uzs: {discount.toLocaleString()}</span>
                     </div>
                   )}
                 </div>
-
-                <div className="flex justify-between text-lg font-light text-gray-900 mb-6">
+                <div className="flex justify-between text-lg sm:text-xl font-light text-gray-900 mb-6 sm:mb-8">
                   <span>Итого:</span>
                   <span>uzs: {total.toLocaleString()}</span>
                 </div>
-
                 <button
                   onClick={openModal}
                   disabled={isCheckingOut}
-                  className="w-full bg-gray-900 text-white py-3 rounded-lg font-light tracking-wide uppercase text-xs disabled:bg-gray-400"
+                  className="w-full bg-gradient-to-r from-gray-900 to-gray-700 text-white py-3 sm:py-4 rounded-lg font-light tracking-wide uppercase text-xs sm:text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                 >
-                  {isCheckingOut ? 'Оформление...' : 'Оформить заказ'}
+                  {isCheckingOut ? (
+                    <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Оформление...</span>
+                    </div>
+                  ) : (
+                    'Оформить заказ'
+                  )}
                 </button>
-
+                <div className="mt-4 sm:mt-6 flex items-center justify-center space-x-2 sm:space-x-3 text-xs sm:text-sm text-gray-500">
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                  <span>Безопасная оплата</span>
+                </div>
               </div>
             </div>
           </div>
@@ -390,22 +471,55 @@ const Basket = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-xl p-6 sm:p-8 max-w-sm sm:max-w-md w-full">
-            <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-4 sm:mb-6 tracking-tight">Контактные данные</h2>
+            <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-4 sm:mb-6 tracking-tight">
+              Контактные данные
+            </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2">Имя</label>
-                <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Введите ваше имя" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs sm:text-sm" />
+                <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2">
+                  Имя
+                </label>
+                <input
+                  type="text"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="Введите ваше имя"
+                  className="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
+                />
               </div>
               <div>
-                <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2">Номер телефона</label>
-                <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Введите номер телефона (например, +998901234567)" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs sm:text-sm" />
+                <label className="block text-xs sm:text-sm font-light text-gray-700 mb-2">
+                  Номер телефона
+                </label>
+                <input
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="Введите номер телефона (например, +998901234567)"
+                  className="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-200"
+                />
               </div>
             </div>
-
             <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-              <button onClick={closeModal} className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg">Отмена</button>
-              <button onClick={handleCheckout} disabled={isCheckingOut || !phoneNumber || !customerName} className="flex-1 bg-gray-900 text-white py-2 rounded-lg">
-                {isCheckingOut ? 'Оформление...' : 'Подтвердить заказ'}
+              <button
+                onClick={closeModal}
+                className="flex-1 bg-gray-200 text-gray-700 py-2 sm:py-3 rounded-lg font-light tracking-wide uppercase text-xs sm:text-sm hover:bg-gray-300 transition-all duration-300"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleCheckout}
+                disabled={isCheckingOut || !phoneNumber || !customerName}
+                className="flex-1 bg-gradient-to-r from-gray-900 to-gray-700 text-white py-2 sm:py-3 rounded-lg font-light tracking-wide uppercase text-xs sm:text-sm hover:from-gray-800 hover:to-gray-600 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isCheckingOut ? (
+                  <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Оформление...</span>
+                  </div>
+                ) : (
+                  'Подтвердить заказ'
+                )}
               </button>
             </div>
           </div>
