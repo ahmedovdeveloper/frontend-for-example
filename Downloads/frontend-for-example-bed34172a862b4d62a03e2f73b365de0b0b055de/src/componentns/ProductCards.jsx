@@ -7,7 +7,7 @@ const ProductCards = () => {
   const navigate = useNavigate();
   const [hoveredCard, setHoveredCard] = useState(null);
   const [products, setProducts] = useState([]);
-
+//  and
   // Список товаров, которые В НАЛИЧИИ (все остальные будут sold out)
   const availableProducts = ["CHELSEA BLACK/BLUE", "Roland Tortoise White", "Roland Tortoise Blue Chameleon", "Chelsea Black Chameleon"];
 
