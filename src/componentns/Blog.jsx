@@ -6,7 +6,7 @@ const Blog = () => {
 
   useEffect(() => {
     // Fetch images from the API
-    fetch('hhttps://backend-mihlievs.onrender.com/api/images')
+    fetch('https://backend-mihlievs.onrender.com/api/images')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
