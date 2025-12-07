@@ -1,153 +1,124 @@
-
+// src/components/ProductView.jsx — РАБОТАЕТ БЕЗ FETCH!
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import DefualtHeader from './DefualtHeader';
 
 const ProductView = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
-  const navigate = useNavigate();
-  
-  // Swipe and drag functionality
+
+  // Локальные товары (вместо fetch)
+  const products = {
+    "1": {
+      _id: "1",
+      name: "CHELSEA BLACK/BLUE",
+      price: 549000,
+      originalPrice: 600000,
+      images: [
+        "/src/assets/product/img2.jpeg",
+        "/src/assets/product/2.jpeg",
+        "/src/assets/product/3.jpeg",
+        "/src/assets/product/5.jpeg"
+      ],
+      colors: ["Black/Blue", "Tortoise"]
+    },
+    "2": {
+      _id: "2",
+      name: "Roland Tortoise White",
+      price: 499000,
+      originalPrice: 550000,
+      images: [
+        "/src/assets/product/tr1.jpeg",
+        "/src/assets/product/tr2.jpeg",
+        "/src/assets/product/tr3.jpeg",
+        "/src/assets/product/tr5.jpeg"
+      ],
+      colors: ["Tortoise White"]
+    },
+    "3": {
+      _id: "3",
+      name: "Roland Tortoise Blue Chameleon",
+      price: 599000,
+      originalPrice: null,
+      images: [
+        "/src/assets/product/rbh1.jpeg",
+        "/src/assets/product/rht2.jpeg",
+        "/src/assets/product/rhm3.jpeg",
+        "/src/assets/product/rhm4.jpeg"
+      ],
+      colors: ["Blue Chameleon"]
+    },
+    "4": {
+      _id: "4",
+      name: "Chelsea Black Chameleon",
+      price: 649000,
+      originalPrice: 700000,
+      images: [
+        "/src/assets/product/chb1.jpeg",
+        "/src/assets/product/cbh2.jpeg",
+        "/src/assets/product/cbh3.jpeg",
+        "/src/assets/product/cbh4.jpeg"
+      ],
+      colors: ["Black Chameleon"]
+    }
+  };
+
+  const product = products[id];
+
+  // Если товар не найден
+  if (!product) {
+    return (
+      <div className="text-center py-32">
+        <h1 className="text-4xl font-bold text-red-600">Товар не найден</h1>
+        <button onClick={() => navigate(-1)} className="mt-6 text-blue-600 underline">
+          ← Вернуться назад
+        </button>
+      </div>
+    );
+  }
+
+  // Swipe и drag
   const imageContainerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-  const [startY, setStartY] = useState(0);
   const [dragDistance, setDragDistance] = useState(0);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`https://backend-mihlievs.onrender.com/api/products/${id}`);
-        console.log('API Response:', response.data);
-        setProduct(response.data);
-      } catch (err) {
-        setError(err.message || 'Failed to fetch product');
-        console.error('Fetch error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [id]);
-
-  // Navigation functions for image swiper
   const goToNextImage = () => {
-    if (product && product.images.length > 0) {
-      setSelectedImage((prev) => (prev + 1) % product.images.length);
-    }
+    setSelectedImage((prev) => (prev + 1) % product.images.length);
   };
 
   const goToPrevImage = () => {
-    if (product && product.images.length > 0) {
-      setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
-    }
+    setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
   };
 
-  // Mouse drag handlers
   const handleMouseDown = (e) => {
-    if (product && product.images.length > 1) {
+    if (product.images.length > 1) {
       setIsDragging(true);
       setStartX(e.clientX);
-      setStartY(e.clientY);
-      setDragDistance(0);
       e.preventDefault();
     }
   };
 
   const handleMouseMove = (e) => {
-    if (isDragging && product && product.images.length > 1) {
-      const currentX = e.clientX;
-      const currentY = e.clientY;
-      const deltaX = currentX - startX;
-      const deltaY = currentY - startY;
-      
-      // Only consider horizontal movement if it's more significant than vertical
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        setDragDistance(deltaX);
-      }
+    if (isDragging) {
+      const deltaX = e.clientX - startX;
+      setDragDistance(deltaX);
     }
   };
 
   const handleMouseUp = () => {
-    if (isDragging && product && product.images.length > 1) {
-      const threshold = 50; // Minimum distance to trigger image change
-      
-      if (Math.abs(dragDistance) > threshold) {
-        if (dragDistance > 0) {
-          goToPrevImage();
-        } else {
-          goToNextImage();
-        }
+    if (isDragging) {
+      if (Math.abs(dragDistance) > 50) {
+        dragDistance > 0 ? goToPrevImage() : goToNextImage();
       }
-      
       setIsDragging(false);
       setDragDistance(0);
     }
   };
 
-  // Touch/swipe handlers
-  const handleTouchStart = (e) => {
-    if (product && product.images.length > 1) {
-      const touch = e.touches[0];
-      setStartX(touch.clientX);
-      setStartY(touch.clientY);
-      setDragDistance(0);
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    if (product && product.images.length > 1) {
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - startX;
-      const deltaY = touch.clientY - startY;
-      
-      // Only consider horizontal movement if it's more significant than vertical
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        setDragDistance(deltaX);
-        e.preventDefault(); // Prevent scrolling when swiping horizontally
-      }
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (product && product.images.length > 1) {
-      const threshold = 50; // Minimum distance to trigger image change
-      
-      if (Math.abs(dragDistance) > threshold) {
-        if (dragDistance > 0) {
-          goToPrevImage();
-        } else {
-          goToNextImage();
-        }
-      }
-      
-      setDragDistance(0);
-    }
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === 'ArrowRight') {
-        goToNextImage();
-      } else if (e.key === 'ArrowLeft') {
-        goToPrevImage();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [product]);
-
-  // Mouse event listeners
   useEffect(() => {
     const handleGlobalMouseMove = (e) => handleMouseMove(e);
     const handleGlobalMouseUp = () => handleMouseUp();
@@ -161,40 +132,62 @@ const ProductView = () => {
       document.removeEventListener('mousemove', handleGlobalMouseMove);
       document.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [isDragging, dragDistance, startX, startY]);
+  }, [isDragging, dragDistance, startX]);
 
-  if (loading) return <div className="text-center py-16">Загрузка...</div>;
-  if (error || !product) return <div className="text-center py-16 text-red-500">Продукт не найден</div>;
+  // Touch support
+  const handleTouchStart = (e) => {
+    if (product.images.length > 1) {
+      setStartX(e.touches[0].clientX);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (product.images.length > 1) {
+      const deltaX = e.touches[0].clientX - startX;
+      setDragDistance(deltaX);
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (Math.abs(dragDistance) > 50) {
+      dragDistance > 0 ? goToPrevImage() : goToNextImage();
+    }
+    setDragDistance(0);
+  };
+
+  // Keyboard arrows
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "ArrowRight") goToNextImage();
+      if (e.key === "ArrowLeft") goToPrevImage();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   const addToCart = () => {
     const cartItem = {
-      id: product._id || product.id,
+      id: product._id,
       name: product.name,
-      variant: product.variant,
       price: product.price,
       originalPrice: product.originalPrice,
       quantity: 1,
       selectedColor: product.colors[selectedColor],
-      image: product.images,
+      image: product.images[0],
     };
 
-    const savedCart = localStorage.getItem('cartItems');
-    let cartItems = savedCart ? JSON.parse(savedCart) : [];
+    const saved = localStorage.getItem("cartItems");
+    let cart = saved ? JSON.parse(saved) : [];
 
-    const existingItem = cartItems.find(
-      (item) => item.id === cartItem.id && item.selectedColor === cartItem.selectedColor
-    );
-    if (existingItem) {
-      cartItems = cartItems.map((item) =>
-        item.id === cartItem.id && item.selectedColor === cartItem.selectedColor
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
+    const existing = cart.find(item => item.id === cartItem.id);
+    if (existing) {
+      cart = cart.map(item => item.id === cartItem.id ? { ...item, quantity: item.quantity + 1 } : item);
     } else {
-      cartItems.push(cartItem);
+      cart.push(cartItem);
     }
 
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem("cartItems", JSON.stringify(cart));
     alert(`${product.name} добавлен в корзину!`);
   };
 
@@ -203,120 +196,93 @@ const ProductView = () => {
       <DefualtHeader />
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Images Section */}
+          {/* Галерея */}
           <div className="space-y-6">
-            {/* Main Image with Swipe/Drag */}
-            <div 
+            <div
               ref={imageContainerRef}
-              className="aspect-square bg-gray-50 flex items-center justify-center p-12 relative cursor-grab active:cursor-grabbing select-none"
+              className="aspect-square bg-gray-50 flex items-center justify-center p-12 relative cursor-grab active:cursor-grabbing select-none overflow-hidden"
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               style={{
-                transform: isDragging ? `translateX(${dragDistance * 0.1}px)` : 'none',
-                transition: isDragging ? 'none' : 'transform 0.3s ease'
+                transform: isDragging ? `translateX(${dragDistance * 0.3}px)` : 'none',
+                transition: isDragging ? 'none' : 'transform 0.4s ease'
               }}
             >
               <img
-                src={`https://backend-mihlievs.onrender.com/uploads/${product.images[selectedImage]}`}
-                alt={`${product.name} - Image ${selectedImage + 1}`}
+                src={product.images[selectedImage]}
+                alt={product.name}
                 className="w-full h-full object-contain pointer-events-none"
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/600x600?text=Image+Not+Found';
-                }}
               />
-              
-              {/* Image Counter - Only show if there are multiple images */}
               {product.images.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white px-3 py-1 rounded-full text-sm">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-full text-sm">
                   {selectedImage + 1} / {product.images.length}
                 </div>
               )}
             </div>
-            
-            {/* Thumbnail Images */}
+
+            {/* Миниатюры */}
             {product.images.length > 1 && (
-              <div className="flex space-x-4 justify-center">
-                {product.images.map((image, index) => (
+              <div className="flex gap-4 justify-center flex-wrap">
+                {product.images.map((img, i) => (
                   <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`w-20 h-20 bg-gray-50 flex items-center justify-center p-2 transition-all duration-300 ${
-                      selectedImage === index ? 'ring-2 ring-black' : 'hover:ring-1 ring-gray-300'
+                    key={i}
+                    onClick={() => setSelectedImage(i)}
+                    className={`w-20 h-20 border-2 rounded-lg overflow-hidden transition-all ${
+                      selectedImage === i ? 'border-black' : 'border-gray-300'
                     }`}
                   >
-                    <img
-                      src={`https://backend-mihlievs.onrender.com/uploads/${image}`}
-                      alt={`${product.name} thumbnail ${index + 1}`}
-                      className="w-full h-full object-contain"
-                    />
+                    <img src={img} alt="" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
             )}
-
-            {/* Navigation Instructions */}
-            {product.images.length > 1 && (
-              <div className="text-center text-gray-500 text-sm">
-                Swipe, drag, or use arrow keys to navigate images
-              </div>
-            )}
           </div>
 
-          {/* Product Info Section */}
+          {/* Информация */}
           <div className="space-y-8">
-            {/* Product Title & Price */}
-            <div className="text-center lg:text-left">
-              <h1 className="text-3xl font-semibold text-black mb-4 uppercase tracking-wide">
+            <div>
+              <h1 className="text-4xl font-light uppercase tracking-wider mb-4">
                 {product.name}
               </h1>
-              <p className="text-2xl text-gray-900 font-normal">
+              <div className="text-3xl font-normal">
                 {product.price.toLocaleString()} uzs
-              </p>
-            </div>
-
-            {/* Frame & Lens Info */}
-            <div className="border-t border-gray-200 pt-6">
-              <p className="text-gray-600 text-sm">
-                Frame: Black / Lenses: Black
-              </p>
-            </div>
-
-            {/* Features */}
-              <div className="text-center">
-                <div className="w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-sm text-gray-900 mb-1">2 week Warranty</h3>
-                <p className="text-xs text-gray-600"></p>
+                {product.originalPrice && (
+                  <span className="ml-4 text-xl text-gray-500 line-through">
+                    {product.originalPrice.toLocaleString()} uzs
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Specifications */}
-            <div className="pt-8 border-t border-gray-200">
-              <h2 className="text-xl font-semibold text-black mb-4 uppercase tracking-wide">
-                SPECIFICATIONS
+            <div className="border-t pt-6">
+              <p className="text-gray-600">Frame: Black / Lenses: Black</p>
+            </div>
+
+            <div className="text-center py-8">
+              <h3 className="font-medium">2 week Warranty</h3>
+            </div>
+
+            <div className="border-t pt-8">
+              <h2 className="text-xl font-semibold uppercase tracking-wider mb-4">
+                Specifications
               </h2>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Bold black acetate frames cut in a clean, rectangular silhouette, 
-                combined with dark lenses that deliver with a fusion of style and 
-                functionality. Finished with signature temple detailing.
+              <p className="text-gray-600 leading-relaxed">
+                Bold black acetate frames cut in a clean, rectangular silhouette...
               </p>
             </div>
-            <div className="pt-4">
-              <button
-                onClick={addToCart}
-                className="border border-gray-900 text-gray-900 px-8 py-3 font-light tracking-wide uppercase text-sm hover:bg-gray-900 hover:text-white transition-all duration-300"
-              >
-                ДОБАВИТЬ В КОРЗИНУ
-              </button>
-            </div>
+
+            <button
+              onClick={addToCart}
+              className="w-full bg-black text-white py-4 text-sm font-light tracking-widest uppercase hover:bg-gray-900 transition"
+            >
+              Добавить в корзину
+            </button>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
