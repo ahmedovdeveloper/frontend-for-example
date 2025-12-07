@@ -1,4 +1,4 @@
-// src/components/Basket.jsx — ПОВНИЙ ГОТОВИЙ КОД (без помилок!)
+// src/components/Basket.jsx — ПОЛНЫЙ ГОТОВЫЙ КОД (на русском, без ошибок!)
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DefualtHeader from './DefualtHeader';
@@ -10,10 +10,10 @@ const Basket = () => {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        console.error("Помилка парсингу корзини:", e);
+        console.error("Ошибка парсинга корзины:", e);
       }
     }
-    // Дефолтні товари, якщо корзина порожня
+    // Товары по умолчанию, если корзина пуста
     return [
       {
         id: 1,
@@ -43,7 +43,7 @@ const Basket = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [customerName, setCustomerName] = useState('');
 
-  // Промокоди
+  // Промокоды
   const promoCodes = {
     SAVE10: { discount: 10, type: 'percentage' },
     SAVE5000: { discount: 5000, type: 'fixed' },
@@ -73,9 +73,9 @@ const Basket = () => {
     if (promoCodes[code]) {
       setAppliedPromo({ code, ...promoCodes[code] });
       setPromoCode('');
-      alert(`Промокод ${code} застосовано!`);
+      alert(`Промокод ${code} применён!`);
     } else {
-      alert('Невірний промокод');
+      alert('Неверный промокод');
     }
   };
 
@@ -98,36 +98,36 @@ const Basket = () => {
 
   const handleCheckout = async () => {
     if (!customerName.trim() || !phoneNumber.trim()) {
-      alert('Заповніть ім\'я та телефон');
+      alert('Заполните имя и телефон');
       return;
     }
 
     if (!/^\+?\d[\d\s-]{8,15}$/.test(phoneNumber.replace(/\s/g, ''))) {
-      alert('Введіть коректний номер телефону');
+      alert('Введите корректный номер телефона');
       return;
     }
 
     setIsCheckingOut(true);
 
     try {
-      const botToken = '7525818901:AAHkfzPxjjLONzhcjjHyx_1QvS3t-jyq42w';
-      const chatId = '-1002751674386';
+      const botToken = 'TOKEN_HERE';
+      const chatId = 'CHAT_ID_HERE';
 
-      let message = `Новий заказ!\n\n`;
-      message += `Ім'я: ${customerName}\n`;
+      let message = `Новый заказ!\n\n`;
+      message += `Имя: ${customerName}\n`;
       message += `Телефон: ${phoneNumber}\n\n`;
-      message += `Товари:\n`;
+      message += `Товары:\n`;
 
       cartItems.forEach(item => {
         message += `• ${item.name}\n`;
-        message += `  Кількість: ${item.quantity} × ${item.price.toLocaleString()} uzs\n`;
+        message += `  Количество: ${item.quantity} × ${item.price.toLocaleString()} uzs\n`;
         if (item.variant) message += `  (${item.variant})\n`;
         message += `\n`;
       });
 
-      message += `Підсумок: ${subtotal.toLocaleString()} uzs\n`;
-      if (discount > 0) message += `Знижка: ${discount.toLocaleString()} uzs\n`;
-      message += `ВСЬОГО: ${total.toLocaleString()} uzs`;
+      message += `Сумма: ${subtotal.toLocaleString()} uzs\n`;
+      if (discount > 0) message += `Скидка: ${discount.toLocaleString()} uzs\n`;
+      message += `ИТОГО: ${total.toLocaleString()} uzs`;
 
       await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
@@ -139,15 +139,15 @@ const Basket = () => {
         })
       });
 
-      alert('Замовлення успішно відправлено! Дякуємо за покупку!');
+      alert('Заказ успешно отправлен! Спасибо за покупку!');
       setCartItems([]);
       localStorage.removeItem('cartItems');
       setAppliedPromo(null);
       closeModal();
 
     } catch (err) {
-      console.error("Помилка відправки:", err);
-      alert('Замовлення прийнято, але не вдалося відправити в Telegram');
+      console.error("Ошибка отправки:", err);
+      alert('Заказ принят, но не удалось отправить в Telegram');
     } finally {
       setIsCheckingOut(false);
     }
@@ -158,9 +158,9 @@ const Basket = () => {
       <div className="bg-gray-50 min-h-screen">
         <DefualtHeader />
         <div className="container mx-auto px-6 py-32 text-center">
-          <h1 className="text-4xl font-light mb-8">Кошик порожній</h1>
+          <h1 className="text-4xl font-light mb-8">Корзина пуста</h1>
           <Link to="/catalog" className="bg-black text-white px-8 py-4 rounded-lg uppercase tracking-wider">
-            Перейти до каталогу
+            Перейти в каталог
           </Link>
         </div>
       </div>
@@ -171,7 +171,7 @@ const Basket = () => {
     <div className="bg-gray-50 min-h-screen">
       <DefualtHeader />
       <div className="container mx-auto px-6 py-12 max-w-7xl">
-        <h1 className="text-4xl font-light mb-12 text-center">Кошик</h1>
+        <h1 className="text-4xl font-light mb-12 text-center">Корзина</h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
@@ -195,7 +195,7 @@ const Basket = () => {
                       {(item.price * item.quantity).toLocaleString()} uzs
                     </span>
                     <button onClick={() => removeItem(item.id)} className="text-red-500 ml-auto">
-                      Видалити
+                      Удалить
                     </button>
                   </div>
                 </div>
@@ -204,21 +204,21 @@ const Basket = () => {
           </div>
 
           <div className="bg-white rounded-xl p-8 shadow-lg h-fit">
-            <h2 className="text-2xl font-light mb-6">Підсумок</h2>
+            <h2 className="text-2xl font-light mb-6">Итог</h2>
 
             <div className="space-y-4 mb-8">
               <div className="flex justify-between text-lg">
-                <span>Підсумок:</span>
+                <span>Сумма:</span>
                 <span>{subtotal.toLocaleString()} uzs</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-green-600">
-                  <span>Знижка:</span>
+                  <span>Скидка:</span>
                   <span>-{discount.toLocaleString()} uzs</span>
                 </div>
               )}
               <div className="flex justify-between text-2xl font-bold pt-4 border-t">
-                <span>До сплати:</span>
+                <span>К оплате:</span>
                 <span>{total.toLocaleString()} uzs</span>
               </div>
             </div>
@@ -227,20 +227,20 @@ const Basket = () => {
               onClick={openModal}
               className="w-full bg-black text-white py-4 rounded-lg uppercase tracking-wider hover:bg-gray-800 transition"
             >
-              Оформити замовлення
+              Оформить заказ
             </button>
           </div>
         </div>
       </div>
 
-      {/* Модалка оформлення */}
+      {/* Модальное окно оформления */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full">
-            <h2 className="text-2xl font-light mb-6">Оформлення замовлення</h2>
+            <h2 className="text-2xl font-light mb-6">Оформить заказ</h2>
             <input
               type="text"
-              placeholder="Ваше ім'я"
+              placeholder="Ваше имя"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               className="w-full border rounded-lg px-4 py-3 mb-4"
@@ -253,13 +253,13 @@ const Basket = () => {
               className="w-full border rounded-lg px-4 py-3 mb-6"
             />
             <div className="flex gap-4">
-              <button onClick={closeModal} className="flex-1 border py-3 rounded-lg">Скасувати</button>
+              <button onClick={closeModal} className="flex-1 border py-3 rounded-lg">Отмена</button>
               <button
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
                 className="flex-1 bg-black text-white py-3 rounded-lg disabled:opacity-50"
               >
-                {isCheckingOut ? "Відправка..." : "Підтвердити"}
+                {isCheckingOut ? "Отправка..." : "Подтвердить"}
               </button>
             </div>
           </div>

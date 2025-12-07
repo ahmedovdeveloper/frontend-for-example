@@ -1,4 +1,4 @@
-// src/components/ProductCards.jsx
+// src/components/ProductCards.jsx — РОБОТАЄ З public/product/
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +6,6 @@ const ProductCards = () => {
   const navigate = useNavigate();
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  // ТВОИ ФОТКИ — ПРЯМО ИЗ src/assets/product/
   const products = [
     {
       _id: "1",
@@ -14,10 +13,10 @@ const ProductCards = () => {
       price: "549.000 uzs",
       originalPrice: "600.000 uzs",
       images: [
-        "/src/assets/product/img2.jpeg",
-        "/src/assets/product/2.jpeg",
-        "/src/assets/product/3.jpeg",
-        "/src/assets/product/5.jpeg"
+        "/product/img2.jpeg",
+        "/product/2.jpeg",
+        "/product/3.jpeg",
+        "/product/5.jpeg"
       ],
       soldOut: false
     },
@@ -27,10 +26,10 @@ const ProductCards = () => {
       price: "499.000 uzs",
       originalPrice: "550.000 uzs",
       images: [
-        "/src/assets/product/tr1.jpeg",
-        "/src/assets/product/tr2.jpeg",
-        "/src/assets/product/tr3.jpeg",
-        "/src/assets/product/tr5.jpeg"
+        "/product/tr1.jpeg",
+        "/product/tr2.jpeg",
+        "/product/tr3.jpeg",
+        "/product/tr5.jpeg"
       ],
       soldOut: false
     },
@@ -40,11 +39,11 @@ const ProductCards = () => {
       price: "599.000 uzs",
       originalPrice: null,
       images: [
-        "/src/assets/product/rbh1.jpeg",
-        "/src/assets/product/rht2.jpeg",
-        "/src/assets/product/rhm3.jpeg",
-        "/src/assets/product/rhm4.jpeg",
-        "/src/assets/product/rhm6.jpeg"
+        "/product/rbh1.jpeg",
+        "/product/rht2.jpeg",
+        "/product/rhm3.jpeg",
+        "/product/rhm4.jpeg",
+        "/product/rhm6.jpeg"
       ],
       soldOut: false
     },
@@ -54,17 +53,17 @@ const ProductCards = () => {
       price: "649.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
-        "/src/assets/product/chb1.jpeg",
-        "/src/assets/product/cbh2.jpeg",
-        "/src/assets/product/cbh3.jpeg",
-        "/src/assets/product/cbh4.jpeg",
-        "/src/assets/product/cbh5.jpeg"
+        "/product/chb1.jpeg",
+        "/product/cbh2.jpeg",
+        "/product/cbh3.jpeg",
+        "/product/cbh4.jpeg",
+        "/product/cbh5.jpeg"
       ],
       soldOut: false
     }
   ];
 
-  const availableProducts = ["CHELSEA BLACK/BLUE", "Roland Tortoise White", "Chelsea Black Chameleon","Roland Tortoise Blue Chameleon"];
+  const availableProducts = ["CHELSEA BLACK/BLUE", "Roland Tortoise White", "Chelsea Black Chameleon", "Roland Tortoise Blue Chameleon"];
 
   const parsePrice = (priceString) => {
     return parseInt(priceString.toString().replace(/[^\d]/g, '')) || 0;
@@ -139,6 +138,7 @@ const ProductCards = () => {
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <div className="aspect-square bg-gray-50 relative overflow-hidden mb-4">
+                  {/* Sold Out */}
                   {soldOut && (
                     <div className="absolute top-4 right-4 z-10">
                       <span className="bg-red-600 text-white px-3 py-1 text-sm font-semibold uppercase tracking-wide">
@@ -147,6 +147,7 @@ const ProductCards = () => {
                     </div>
                   )}
 
+                  {/* Discount */}
                   {!soldOut && discount > 0 && (
                     <div className="absolute top-4 left-4 z-10">
                       <span className="bg-red-600 text-white px-3 py-1 text-sm font-semibold rounded-full">
