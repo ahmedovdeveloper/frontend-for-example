@@ -39,8 +39,8 @@ const ProductCards = () => {
       price: "599.000 uzs",
       originalPrice: null,
       images: [
-        "/product/rbh1.jpeg",
         "/product/rht2.jpeg",
+        "/product/rbh1.jpeg",
         "/product/rhm3.jpeg",
         "/product/rhm4.jpeg",
         "/product/rhm6.jpeg"
@@ -53,8 +53,8 @@ const ProductCards = () => {
       price: "649.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
-        "/product/chb1.jpeg",
         "/product/cbh2.jpeg",
+        "/product/chb1.jpeg",
         "/product/cbh3.jpeg",
         "/product/cbh4.jpeg",
         "/product/cbh5.jpeg"
