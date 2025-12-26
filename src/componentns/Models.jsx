@@ -7,62 +7,62 @@ const Models = () => {
 
   const categories = [
     { 
-      src: '/public/collection/1.jpg', 
+      src: '/collection/1.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/public/collection/9.jpg', 
+      src: '/collection/9.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: '/public/collection/10.jpg', 
+      src: '/collection/10.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: '/public/collection/11.jpg', 
+      src: '/collection/11.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/public/collection/4.jpg', 
+      src: '/collection/4.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/public/collection/5.jpg', 
+      src: '/collection/5.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/public/collection/6.jpg', 
+      src: '/collection/6.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: '/public/collection/3.jpg', 
+      src: '/collection/3.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/public/collection/7.jpg', 
+      src: '/collection/7.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/public/collection/8.jpg', 
+      src: '/collection/8.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: '/public/collection/2.jpg', 
+      src: '/collection/2.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/public/collection/9.jpg', 
+      src: '/collection/9.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     }

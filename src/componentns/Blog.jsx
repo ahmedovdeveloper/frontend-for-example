@@ -8,10 +8,10 @@ const Blog = () => {
 
   // Placeholder images for the gallery
   const photos = [
-    { src: '/public/product/rhm3.jpeg', title: 'MWC1 TORTOISE' },
-    { src: '/public/product/rht2.jpeg', title: 'MWC1 CHELSEA' },
-    { src: '/public/product/cbh4.jpeg', title: 'MWC1 CHELSEA' },
-    { src: '/public/product/img2.jpeg', title: 'MWC1 TORTOISE' },
+    { src: '/product/rhm3.jpeg', title: 'MWC1 TORTOISE' },
+    { src: '/product/rht2.jpeg', title: 'MWC1 CHELSEA' },
+    { src: '/product/cbh4.jpeg', title: 'MWC1 CHELSEA' },
+    { src: '/product/img2.jpeg', title: 'MWC1 TORTOISE' },
   ];
 
   // Responsive logic
