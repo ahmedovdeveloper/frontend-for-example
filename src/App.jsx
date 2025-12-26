@@ -6,6 +6,7 @@ import Footer from './componentns/Footer'
 import FAQ from './componentns/Faq'
 import Blog from './componentns/Blog'
 import Video from './componentns/Video'
+import Models from './componentns/Models'
 // import SunglassesLanding from './componentns/SunglassesLanding'
 const App = () => {
  
@@ -17,11 +18,14 @@ const App = () => {
     <main>
       <PromotionalBanner/>
     <ProductCards/>
+    <Models/>
+
     <Video/>
 
     <FAQ/>
     {/* <SunglassesLanding/> */}
     <Blog/>
+
     </main>
     <Footer/>
    </>

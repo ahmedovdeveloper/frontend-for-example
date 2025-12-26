@@ -30,7 +30,7 @@ const ProductView = () => {
       images: [
         "/product/tr1.jpeg",
         "/product/tr2.jpeg",
-        "/product/tr3.jpeg",
+        "/product/tr3.png",
         "/product/tr5.jpeg"
       ],
       colors: ["Tortoise White"]
