@@ -39,6 +39,7 @@ const ProductView = () => {
       _id: "3",
       name: "Roland Tortoise Blue Chameleon",
       price: 420000,
+      originalPrice: 599000,
       images: [
         "/product/rbh1.jpeg",
         "/product/rht2.jpeg",

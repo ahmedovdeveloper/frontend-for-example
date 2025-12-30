@@ -37,7 +37,7 @@ const ProductCards = () => {
       _id: "3",
       name: "Roland Tortoise Blue Chameleon",
       price: "420.000 uzs",
-      originalPrice: null,
+      originalPrice: "599.000 uzs",
       images: [
         "/product/rht2.jpeg",
         "/product/rbh1.jpeg",
