@@ -10,7 +10,7 @@ const ProductCards = () => {
     {
       _id: "1",
       name: "CHELSEA BLACK/BLUE",
-      price: "549.000 uzs",
+      price: "385.000 uzs",
       originalPrice: "600.000 uzs",
       images: [
         "/product/img2.jpeg",
@@ -23,7 +23,7 @@ const ProductCards = () => {
     {
       _id: "2",
       name: "Roland Tortoise White",
-      price: "499.000 uzs",
+      price: "350.000 uzs",
       originalPrice: "550.000 uzs",
       images: [
         "/product/tr1.jpeg",
@@ -36,7 +36,7 @@ const ProductCards = () => {
     {
       _id: "3",
       name: "Roland Tortoise Blue Chameleon",
-      price: "599.000 uzs",
+      price: "420.000 uzs",
       originalPrice: null,
       images: [
         "/product/rht2.jpeg",
@@ -50,7 +50,7 @@ const ProductCards = () => {
     {
       _id: "4",
       name: "Chelsea Black Chameleon",
-      price: "649.000 uzs",
+      price: "445.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
         "/product/cbh2.jpeg",
