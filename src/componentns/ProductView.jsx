@@ -12,7 +12,7 @@ const ProductView = () => {
     "1": {
       _id: "1",
       name: "CHELSEA BLACK/BLUE",
-      price: 549000,
+      price: 385000,
       originalPrice: 600000,
       images: [
         "/product/img2.jpeg",
@@ -25,7 +25,7 @@ const ProductView = () => {
     "2": {
       _id: "2",
       name: "Roland Tortoise White",
-      price: 499000,
+      price: 350000,
       originalPrice: 550000,
       images: [
         "/product/tr1.jpeg",
@@ -38,7 +38,7 @@ const ProductView = () => {
     "3": {
       _id: "3",
       name: "Roland Tortoise Blue Chameleon",
-      price: 599000,
+      price: 420000,
       images: [
         "/product/rbh1.jpeg",
         "/product/rht2.jpeg",
@@ -50,7 +50,7 @@ const ProductView = () => {
     "4": {
       _id: "4",
       name: "Chelsea Black Chameleon",
-      price: 649000,
+      price: 455000,
       originalPrice: 700000,
       images: [
         "/product/chb1.jpeg",
