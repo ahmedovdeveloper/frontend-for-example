@@ -50,7 +50,7 @@ const ProductCards = () => {
     {
       _id: "4",
       name: "Chelsea Black Chameleon",
-      price: "445.000 uzs",
+      price: "455.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
         "/product/cbh2.jpeg",
