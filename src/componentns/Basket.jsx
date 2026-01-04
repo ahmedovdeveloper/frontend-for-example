@@ -110,8 +110,8 @@ const Basket = () => {
     setIsCheckingOut(true);
 
     try {
-      const botToken = 'TOKEN_HERE';
-      const chatId = 'CHAT_ID_HERE';
+      const botToken = '8431125135:AAEJAS0uhWD75n3cEq4lonFRaA6o0t7ZSkw';
+      const chatId = '-5192987462';
 
       let message = `Новый заказ!\n\n`;
       message += `Имя: ${customerName}\n`;
