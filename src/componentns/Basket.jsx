@@ -1,4 +1,4 @@
-// src/components/Basket.jsx
+// src/components/Basket.jsx — ГОТОВЫЙ КОД С "КОРЗИНА ПУСТА"
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DefualtHeader from './DefualtHeader';
@@ -11,29 +11,10 @@ const Basket = () => {
         return JSON.parse(saved);
       } catch (e) {
         console.error("Ошибка парсинга корзины:", e);
+        return [];
       }
     }
-    // Товары по умолчанию, если корзина пуста
-    return [
-      {
-        id: 1,
-        name: "CHELSEA BLACK/BLUE",
-        price: 549000,
-        originalPrice: 600000,
-        quantity: 1,
-        variant: "Classic",
-        image: "/src/assets/product/img2.jpeg"
-      },
-      {
-        id: 2,
-        name: "Roland Tortoise White",
-        price: 499000,
-        originalPrice: 550000,
-        quantity: 2,
-        variant: "Premium",
-        image: "/src/assets/product/tr1.jpeg"
-      }
-    ];
+    return []; // если ничего нет — пустая корзина
   });
 
   const [promoCode, setPromoCode] = useState('');
@@ -111,7 +92,7 @@ const Basket = () => {
 
     try {
       const botToken = '8431125135:AAEJAS0uhWD75n3cEq4lonFRaA6o0t7ZSkw';
-      const chatId = '-5192987462'; // группа
+      const chatId = '-1005192987462'; // supergroup ID (с -100)
 
       let message = `🛒 <b>Новый заказ!</b>\n\n`;
       message += `👤 <b>Имя:</b> ${customerName}\n`;
@@ -130,7 +111,7 @@ const Basket = () => {
         message += `<b>Скидка (${appliedPromo.code}):</b> -${discount.toLocaleString()} uzs\n`;
       }
       message += `<b>Итого к оплате:</b> ${total.toLocaleString()} uzs\n\n`;
-      message += `Спасибо за заказ! 💙`;
+      message += `Спасибо за заказ! 💎`;
 
       const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
@@ -145,36 +126,51 @@ const Basket = () => {
       const result = await response.json();
 
       if (result.ok) {
-        alert('✅ Заказ успешно отправлен в группу! Спасибо за покупку!');
+        alert('✅ Заказ успешно отправлен в группу!');
         setCartItems([]);
         localStorage.removeItem('cartItems');
         setAppliedPromo(null);
         closeModal();
       } else {
-        alert('❌ Ошибка отправки в Telegram: ' + (result.description || 'Неизвестная ошибка'));
+        alert('❌ Ошибка: ' + (result.description || 'Неизвестная ошибка'));
       }
     } catch (err) {
       console.error("Ошибка отправки:", err);
-      alert('Заказ принят, но не удалось отправить в Telegram. Свяжитесь с нами вручную.');
+      alert('Заказ принят, но не удалось отправить в Telegram');
     } finally {
       setIsCheckingOut(false);
     }
   };
 
+  // Если корзина пуста — красивое сообщение
   if (cartItems.length === 0) {
     return (
       <div className="bg-gray-50 min-h-screen">
         <DefualtHeader />
         <div className="container mx-auto px-6 py-32 text-center">
-          <h1 className="text-4xl font-light mb-8">Корзина пуста</h1>
-          <Link to="/catalog" className="bg-black text-white px-8 py-4 rounded-lg uppercase tracking-wider">
-            Перейти в каталог
-          </Link>
+          <div className="max-w-md mx-auto">
+            <div className="text-gray-400 mb-8">
+              <svg className="w-24 h-24 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 21h12m-12 0a2 2 0 104 0m6 0a2 2 0 100-4" />
+              </svg>
+            </div>
+            <h1 className="text-4xl font-light mb-6 text-gray-800">Корзина пуста</h1>
+            <p className="text-gray-600 text-lg mb-10">
+              Добавьте товары из каталога, чтобы оформить заказ
+            </p>
+            <Link 
+              to="/catalog" 
+              className="inline-block bg-black text-white px-10 py-4 rounded-lg uppercase tracking-wider text-sm hover:bg-gray-800 transition"
+            >
+              Перейти в каталог
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Если есть товары — показываем корзину
   return (
     <div className="bg-gray-50 min-h-screen">
       <DefualtHeader />
@@ -241,7 +237,7 @@ const Basket = () => {
         </div>
       </div>
 
-      {/* Модальное окно оформления */}
+      {/* Модальное окно */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-8 max-w-md w-full">
