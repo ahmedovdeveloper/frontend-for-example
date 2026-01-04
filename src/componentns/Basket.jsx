@@ -92,7 +92,7 @@ const Basket = () => {
 
     try {
       const botToken = '8431125135:AAEJAS0uhWD75n3cEq4lonFRaA6o0t7ZSkw';
-      const chatId = '-1005192987462'; // supergroup ID (с -100)
+      const chatId = '-1002751674386'; // supergroup ID (с -100)
 
       let message = `🛒 <b>Новый заказ!</b>\n\n`;
       message += `👤 <b>Имя:</b> ${customerName}\n`;
