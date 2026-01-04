@@ -1,4 +1,4 @@
-// src/components/Basket.jsx — ПОЛНЫЙ ГОТОВЫЙ КОД (на русском, без ошибок!)
+// src/components/Basket.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DefualtHeader from './DefualtHeader';
@@ -111,25 +111,28 @@ const Basket = () => {
 
     try {
       const botToken = '8431125135:AAEJAS0uhWD75n3cEq4lonFRaA6o0t7ZSkw';
-      const chatId = '-5192987462';
+      const chatId = '-5192987462'; // группа
 
-      let message = `Новый заказ!\n\n`;
-      message += `Имя: ${customerName}\n`;
-      message += `Телефон: ${phoneNumber}\n\n`;
-      message += `Товары:\n`;
+      let message = `🛒 <b>Новый заказ!</b>\n\n`;
+      message += `👤 <b>Имя:</b> ${customerName}\n`;
+      message += `📱 <b>Телефон:</b> ${phoneNumber}\n\n`;
+      message += `<b>Товары:</b>\n`;
 
       cartItems.forEach(item => {
         message += `• ${item.name}\n`;
-        message += `  Количество: ${item.quantity} × ${item.price.toLocaleString()} uzs\n`;
         if (item.variant) message += `  (${item.variant})\n`;
-        message += `\n`;
+        message += `  Количество: ${item.quantity} × ${item.price.toLocaleString()} uzs\n`;
+        message += `  Сумма: ${(item.price * item.quantity).toLocaleString()} uzs\n\n`;
       });
 
-      message += `Сумма: ${subtotal.toLocaleString()} uzs\n`;
-      if (discount > 0) message += `Скидка: ${discount.toLocaleString()} uzs\n`;
-      message += `ИТОГО: ${total.toLocaleString()} uzs`;
+      message += `<b>Сумма товаров:</b> ${subtotal.toLocaleString()} uzs\n`;
+      if (discount > 0) {
+        message += `<b>Скидка (${appliedPromo.code}):</b> -${discount.toLocaleString()} uzs\n`;
+      }
+      message += `<b>Итого к оплате:</b> ${total.toLocaleString()} uzs\n\n`;
+      message += `Спасибо за заказ! 💙`;
 
-      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -139,15 +142,20 @@ const Basket = () => {
         })
       });
 
-      alert('Заказ успешно отправлен! Спасибо за покупку!');
-      setCartItems([]);
-      localStorage.removeItem('cartItems');
-      setAppliedPromo(null);
-      closeModal();
+      const result = await response.json();
 
+      if (result.ok) {
+        alert('✅ Заказ успешно отправлен в группу! Спасибо за покупку!');
+        setCartItems([]);
+        localStorage.removeItem('cartItems');
+        setAppliedPromo(null);
+        closeModal();
+      } else {
+        alert('❌ Ошибка отправки в Telegram: ' + (result.description || 'Неизвестная ошибка'));
+      }
     } catch (err) {
       console.error("Ошибка отправки:", err);
-      alert('Заказ принят, но не удалось отправить в Telegram');
+      alert('Заказ принят, но не удалось отправить в Telegram. Свяжитесь с нами вручную.');
     } finally {
       setIsCheckingOut(false);
     }
