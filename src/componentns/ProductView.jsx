@@ -1,7 +1,7 @@
 // src/components/ProductView.jsx
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import DefaultHeader from './DefaultHeader'; // Виправлено опечатку: Defualt → Default
+import DefualtHeader from './DefualtHeader';
 
 const ProductView = () => {
   const { id } = useParams(); // id з URL, наприклад "1", "2", "3", "4"
@@ -110,8 +110,8 @@ const ProductView = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <DefaultHeader />
 
+    <DefualtHeader/>
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Галерея зображень */}
