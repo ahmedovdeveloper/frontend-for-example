@@ -23,8 +23,6 @@ const App = () => {
     <Video/>
 
     <FAQ/>
-    {/* <SunglassesLanding/> */}
-    <Blog/>
 
     </main>
     <Footer/>
