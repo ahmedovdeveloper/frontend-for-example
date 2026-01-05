@@ -105,7 +105,7 @@ const ProductView = () => {
     }
 
     localStorage.setItem('cartItems', JSON.stringify(cart));
-    alert(`${product.name} додано до кошика!`);
+    alert(`${product.name} добавить в карзину`);
   };
 
   return (
@@ -167,7 +167,7 @@ const ProductView = () => {
               onClick={addToCart}
               className="w-full bg-black text-white py-4 rounded-lg uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors"
             >
-              Додати в кошик
+             добавить в карзину
             </button>
           </div>
         </div>
