@@ -1,13 +1,14 @@
 // src/components/ProductView.jsx
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import DefualtHeader from './DefualtHeader';
+import DefaultHeader from './DefaultHeader'; // Виправлено опечатку: Defualt → Default
 
 const ProductView = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // id з URL, наприклад "1", "2", "3", "4"
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
 
+  // Той самий масив продуктів, що й у ProductCards (з уніфікованими зображеннями)
   const products = [
     {
       _id: "1",
@@ -44,7 +45,7 @@ const ProductView = () => {
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603995/uploads/lsh05uikpt4fpn6yyhyp.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604016/uploads/jgbpn77axon8zj8vkmzu.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604084/uploads/tu4o27x0nkak2exmurri.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg"
       ],
       soldOut: false
     },
@@ -54,16 +55,18 @@ const ProductView = () => {
       price: "455.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
+        // Уніфіковано — правильне перше фото, як у детальному вигляді
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604184/uploads/xvlyl0me6pi1ohliwfn1.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg"
       ],
       soldOut: false
     }
   ];
 
-  const product = products[id];
+  // Правильний пошук продукту за _id (рядок)
+  const product = products.find(p => p._id === id);
 
   if (!product) {
     return (
@@ -76,38 +79,46 @@ const ProductView = () => {
     );
   }
 
+  // Функція парсингу ціни (як у ProductCards)
+  const parsePrice = (priceString) => {
+    return parseInt(priceString.toString().replace(/[^\d]/g, ''), 10) || 0;
+  };
+
   const addToCart = () => {
     const cartItem = {
       id: product._id,
       name: product.name,
-      price: product.price,
-      originalPrice: product.originalPrice,
+      price: parsePrice(product.price),
+      originalPrice: product.originalPrice ? parsePrice(product.originalPrice) : undefined,
       quantity: 1,
       image: product.images[0],
     };
 
     const saved = localStorage.getItem('cartItems');
     let cart = saved ? JSON.parse(saved) : [];
+
     const existing = cart.find(item => item.id === cartItem.id);
     if (existing) {
-      cart = cart.map(item => 
+      cart = cart.map(item =>
         item.id === cartItem.id ? { ...item, quantity: item.quantity + 1 } : item
       );
     } else {
       cart.push(cartItem);
     }
+
     localStorage.setItem('cartItems', JSON.stringify(cart));
     alert(`${product.name} додано до кошика!`);
   };
 
   return (
     <div className="bg-white min-h-screen">
-      <DefualtHeader />
+      <DefaultHeader />
+
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Галерея */}
+          {/* Галерея зображень */}
           <div className="space-y-6">
-            <div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden">
+            <div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden relative">
               <img
                 src={product.images[selectedImage]}
                 alt={product.name}
@@ -121,33 +132,34 @@ const ProductView = () => {
             </div>
 
             {product.images.length > 1 && (
-              <div className="flex gap-4 justify-center">
+              <div className="flex gap-4 justify-center flex-wrap">
                 {product.images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`w-20 h-20 border-2 rounded-lg overflow-hidden ${
+                    className={`w-20 h-20 border-2 rounded-lg overflow-hidden transition-all ${
                       selectedImage === i ? 'border-black' : 'border-gray-300'
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img src={img} alt={`${product.name} thumbnail ${i + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Інформація */}
-          <div className="space-y-8">
+          {/* Інформація про товар */}
+          <div className="space-y-8 flex flex-col justify-center">
             <div>
-              <h1 className="text-4xl font-light uppercase tracking-wider mb-4">
+              <h1 className="text-4xl font-light uppercase tracking-wider mb-6">
                 {product.name}
               </h1>
-              <div className="text-3xl">
-                {product.price.toLocaleString()} uzs
-                {product.originalPrice && (
-                  <span className="ml-4 text-xl text-gray-500 line-through">
-                    {product.originalPrice.toLocaleString()} uzs
+
+              <div className="text-3xl font-medium">
+                {parsePrice(product.price).toLocaleString()} uzs
+                {product.originalPrice && parsePrice(product.originalPrice) > parsePrice(product.price) && (
+                  <span className="ml-6 text-xl text-gray-500 line-through">
+                    {parsePrice(product.originalPrice).toLocaleString()} uzs
                   </span>
                 )}
               </div>
@@ -155,9 +167,9 @@ const ProductView = () => {
 
             <button
               onClick={addToCart}
-              className="w-full bg-black text-white py-4 rounded-lg uppercase tracking-wider hover:bg-gray-800"
+              className="w-full bg-black text-white py-4 rounded-lg uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors"
             >
-              Добавить в корзину
+              Додати в кошик
             </button>
           </div>
         </div>

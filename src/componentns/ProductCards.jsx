@@ -52,7 +52,7 @@ const ProductCards = () => {
       price: "455.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604184/uploads/xvlyl0me6pi1ohliwfn1.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604495/uploads/o3mimvv3nqoyawn3ogh0.png",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
