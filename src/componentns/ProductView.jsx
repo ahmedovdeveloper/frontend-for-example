@@ -8,60 +8,60 @@ const ProductView = () => {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const products = {
-    "1": {
+  const products = [
+    {
       _id: "1",
       name: "CHELSEA BLACK/BLUE",
-      price: 385000,
-      originalPrice: 600000,
+      price: "385.000 uzs",
+      originalPrice: "600.000 uzs",
       images: [
-        "/product/img2.jpeg",
-        "/product/2.jpeg",
-        "/product/3.jpeg",
-        "/product/5.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603549/uploads/xp8i1txivzp8ildi4uzt.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603609/uploads/nlyorrjsoj1ydy2o6zqf.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603663/uploads/udizegkmpbtxi2fyibp7.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603724/uploads/am41thknuqhsxxnc9rq0.jpg"
       ],
-      colors: ["Black/Blue"]
+      soldOut: false
     },
-    "2": {
+    {
       _id: "2",
       name: "Roland Tortoise White",
-      price: 350000,
-      originalPrice: 550000,
+      price: "350.000 uzs",
+      originalPrice: "550.000 uzs",
       images: [
-        "/product/tr1.jpeg",
-        "/product/tr2.jpeg",
-        "/product/tr3.png",
-        "/product/tr5.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603775/uploads/kt8txzbiywzekwosfryi.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603810/uploads/sk5duovigsrfhctsbhii.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603857/uploads/mfwmcn8eekjhwnozlfm3.png",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603961/uploads/jc9l7jlrlwdigtyrsdtg.jpg"
       ],
-      colors: ["Tortoise White"]
+      soldOut: false
     },
-    "3": {
+    {
       _id: "3",
       name: "Roland Tortoise Blue Chameleon",
-      price: 420000,
-      originalPrice: 599000,
+      price: "420.000 uzs",
+      originalPrice: "599.000 uzs",
       images: [
-        "/product/rbh1.jpeg",
-        "/product/rht2.jpeg",
-        "/product/rhm3.jpeg",
-        "/product/rhm4.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603995/uploads/lsh05uikpt4fpn6yyhyp.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604016/uploads/jgbpn77axon8zj8vkmzu.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604084/uploads/tu4o27x0nkak2exmurri.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg",
       ],
-      colors: ["Blue Chameleon"]
+      soldOut: false
     },
-    "4": {
+    {
       _id: "4",
       name: "Chelsea Black Chameleon",
-      price: 455000,
-      originalPrice: 700000,
+      price: "455.000 uzs",
+      originalPrice: "700.000 uzs",
       images: [
-        "/product/chb1.jpeg",
-        "/product/cbh2.jpeg",
-        "/product/cbh3.jpeg",
-        "/product/cbh4.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604184/uploads/xvlyl0me6pi1ohliwfn1.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
       ],
-      colors: ["Black Chameleon"]
+      soldOut: false
     }
-  };
+  ];
 
   const product = products[id];
 

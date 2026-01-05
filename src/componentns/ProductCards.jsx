@@ -13,10 +13,10 @@ const ProductCards = () => {
       price: "385.000 uzs",
       originalPrice: "600.000 uzs",
       images: [
-        "/product/img2.jpeg",
-        "/product/2.jpeg",
-        "/product/3.jpeg",
-        "/product/5.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603549/uploads/xp8i1txivzp8ildi4uzt.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603609/uploads/nlyorrjsoj1ydy2o6zqf.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603663/uploads/udizegkmpbtxi2fyibp7.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603724/uploads/am41thknuqhsxxnc9rq0.jpg"
       ],
       soldOut: false
     },
@@ -26,10 +26,10 @@ const ProductCards = () => {
       price: "350.000 uzs",
       originalPrice: "550.000 uzs",
       images: [
-        "/product/tr1.jpeg",
-        "/product/tr2.jpeg",
-        "/product/tr3.png",
-        "/product/tr5.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603775/uploads/kt8txzbiywzekwosfryi.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603810/uploads/sk5duovigsrfhctsbhii.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603857/uploads/mfwmcn8eekjhwnozlfm3.png",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603961/uploads/jc9l7jlrlwdigtyrsdtg.jpg"
       ],
       soldOut: false
     },
@@ -39,11 +39,10 @@ const ProductCards = () => {
       price: "420.000 uzs",
       originalPrice: "599.000 uzs",
       images: [
-        "/product/rht2.jpeg",
-        "/product/rbh1.jpeg",
-        "/product/rhm3.jpeg",
-        "/product/rhm4.jpeg",
-        "/product/rhm6.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603995/uploads/lsh05uikpt4fpn6yyhyp.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604016/uploads/jgbpn77axon8zj8vkmzu.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604084/uploads/tu4o27x0nkak2exmurri.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg",
       ],
       soldOut: false
     },
@@ -53,11 +52,10 @@ const ProductCards = () => {
       price: "455.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
-        "/product/cbh2.jpeg",
-        "/product/chb1.jpeg",
-        "/product/cbh3.jpeg",
-        "/product/cbh4.jpeg",
-        "/product/cbh5.jpeg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604184/uploads/xvlyl0me6pi1ohliwfn1.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
       ],
       soldOut: false
     }
