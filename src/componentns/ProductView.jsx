@@ -58,7 +58,7 @@ const ProductView = () => {
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604495/uploads/o3mimvv3nqoyawn3ogh0.png",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767605868/uploads/tgymlurmbressatnrgm4.jpg",
       ],
       soldOut: false
     }]
