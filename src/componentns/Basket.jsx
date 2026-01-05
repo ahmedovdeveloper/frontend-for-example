@@ -98,7 +98,7 @@ const Basket = () => {
       message += `👤 <b>Имя:</b> ${customerName}\n`;
       message += `📱 <b>Телефон:</b> ${phoneNumber}\n\n`;
       message += `<b>Товары:</b>\n`;
-
+      // message
       cartItems.forEach(item => {
         message += `• ${item.name}\n`;
         if (item.variant) message += `  (${item.variant})\n`;
