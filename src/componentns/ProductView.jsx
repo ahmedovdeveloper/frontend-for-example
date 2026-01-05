@@ -9,7 +9,7 @@ const ProductView = () => {
   const [selectedImage, setSelectedImage] = useState(0);
 
   // Той самий масив продуктів, що й у ProductCards (з уніфікованими зображеннями)
-  const products = [
+    const products = [
     {
       _id: "1",
       name: "CHELSEA BLACK/BLUE",
@@ -45,7 +45,7 @@ const ProductView = () => {
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603995/uploads/lsh05uikpt4fpn6yyhyp.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604016/uploads/jgbpn77axon8zj8vkmzu.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604084/uploads/tu4o27x0nkak2exmurri.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg",
       ],
       soldOut: false
     },
@@ -55,15 +55,13 @@ const ProductView = () => {
       price: "455.000 uzs",
       originalPrice: "700.000 uzs",
       images: [
-        // Уніфіковано — правильне перше фото, як у детальному вигляді
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604184/uploads/xvlyl0me6pi1ohliwfn1.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604495/uploads/o3mimvv3nqoyawn3ogh0.png",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg"
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
       ],
       soldOut: false
-    }
-  ];
+    }]
 
   // Правильний пошук продукту за _id (рядок)
   const product = products.find(p => p._id === id);
