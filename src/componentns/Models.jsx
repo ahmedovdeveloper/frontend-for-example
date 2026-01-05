@@ -7,62 +7,42 @@ const Models = () => {
 
   const categories = [
     { 
-      src: '/collection/1.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606165/uploads/rveej32gm4msypue44ku.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/collection/9.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606224/uploads/mygac9eobrvtxyo5xpxj.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: '/collection/10.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606301/uploads/ir7moul1zk6shvqweuup.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: '/collection/11.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606373/uploads/sgs6olkomgusazuvicgj.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/collection/4.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606497/uploads/ntqnddvbojppifdo16bf.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/collection/5.jpg', 
-      title: 'GLASSES',
-      bgColor: 'bg-stone-200'
-    },
-    { 
-      src: '/collection/6.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606675/uploads/m5myymtyuqwslfietruu.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: '/collection/3.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606645/uploads/ftvzc2l5l87mc5hc2mhj.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: '/collection/7.jpg', 
-      title: 'GLASSES',
-      bgColor: 'bg-stone-200'
-    },
-    { 
-      src: '/collection/8.jpg', 
-      title: 'GLASSES',
-      bgColor: 'bg-stone-200'
-    },
-     { 
-      src: '/collection/2.jpg', 
-      title: 'GLASSES',
-      bgColor: 'bg-stone-200'
-    },
-    { 
-      src: '/collection/9.jpg', 
+      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606536/uploads/eiyxm8j9iunpcjkclqef.jpg', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     }
