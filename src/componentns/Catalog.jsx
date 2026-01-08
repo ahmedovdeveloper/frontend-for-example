@@ -1,7 +1,7 @@
-// src/components/Catalog.jsx — ПРАВИЛЬНИЙ HEADER + public/product/
+// src/components/Catalog.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DefualtHeader from './DefualtHeader';  // ← ЦЕ ТВІЙ ПРАВИЛЬНИЙ HEADER!
+import DefualtHeader from './DefualtHeader'; // ← ТВІЙ ПРАВИЛЬНИЙ HEADER
 
 const Catalog = () => {
   const navigate = useNavigate();
@@ -11,33 +11,35 @@ const Catalog = () => {
     {
       _id: "1",
       name: "CHELSEA BLACK/BLUE",
-      price: "385.000 uzs",
-      originalPrice: "600.000 uzs",
+      price: "549.000 uzs",
+      originalPrice: "549.000 uzs",
       images: [
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603549/uploads/xp8i1txivzp8ildi4uzt.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603609/uploads/nlyorrjsoj1ydy2o6zqf.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603663/uploads/udizegkmpbtxi2fyibp7.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603724/uploads/am41thknuqhsxxnc9rq0.jpg"
       ],
-      soldOut: false
+      soldOut: false,
+      stockLeft: 1 // ← Добавляем количество оставшихся штук только для этого товара
     },
     {
       _id: "2",
       name: "Roland Tortoise White",
-      price: "350.000 uzs",
-      originalPrice: "550.000 uzs",
+      price: "499.000 uzs",
+      originalPrice: "499.000 uzs",
       images: [
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603775/uploads/kt8txzbiywzekwosfryi.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603810/uploads/sk5duovigsrfhctsbhii.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603857/uploads/mfwmcn8eekjhwnozlfm3.png",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603961/uploads/jc9l7jlrlwdigtyrsdtg.jpg"
       ],
-      soldOut: false
+      soldOut: false,
+      stockLeft: null // Нет ограничения
     },
     {
       _id: "3",
       name: "Roland Tortoise Blue Chameleon",
-      price: "420.000 uzs",
+      price: "599.000 uzs",
       originalPrice: "599.000 uzs",
       images: [
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603995/uploads/lsh05uikpt4fpn6yyhyp.jpg",
@@ -45,7 +47,8 @@ const Catalog = () => {
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604084/uploads/tu4o27x0nkak2exmurri.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg",
       ],
-      soldOut: false
+      soldOut: false,
+      stockLeft: null
     },
     {
       _id: "4",
@@ -56,12 +59,14 @@ const Catalog = () => {
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604495/uploads/o3mimvv3nqoyawn3ogh0.png",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
         "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767605868/uploads/tgymlurmbressatnrgm4.jpg",
+        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
       ],
-      soldOut: false
-    }]
-    
-  const availableProducts = ["CHELSEA BLACK/BLUE", "Roland Tortoise White", "Chelsea Black Chameleon", "Roland Tortoise Blue Chameleon"];
+      soldOut: false,
+      stockLeft: null
+    }
+  ];
+
+  const availableProducts = ["CHELSEA BLACK/BLUE", "Roland Tortoise White", "Roland Tortoise Blue Chameleon"];
 
   const parsePrice = (priceString) => {
     return parseInt(priceString.toString().replace(/[^\d]/g, '')) || 0;
@@ -79,7 +84,7 @@ const Catalog = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      {/* ПРАВИЛЬНИЙ HEADER — DefualtHeader */}
+      {/* ПРАВИЛЬНЫЙ HEADER */}
       <DefualtHeader />
 
       <section className="py-16 px-6">
@@ -97,6 +102,7 @@ const Catalog = () => {
             {products.map((product) => {
               const soldOut = isSoldOut(product);
               const discount = calculateDiscount(product.originalPrice, product.price);
+              const isLowStock = product.stockLeft === 1 && !soldOut; // Только для CHELSEA BLACK/BLUE
 
               return (
                 <div
@@ -109,6 +115,7 @@ const Catalog = () => {
                   onMouseLeave={() => setHoveredProduct(null)}
                 >
                   <div className="aspect-square bg-gray-50 relative overflow-hidden mb-4">
+                    {/* Sold Out */}
                     {soldOut && (
                       <div className="absolute top-4 right-4 z-10">
                         <span className="bg-red-600 text-white px-3 py-1 text-sm font-semibold uppercase tracking-wide">
@@ -117,10 +124,20 @@ const Catalog = () => {
                       </div>
                     )}
 
+                    {/* Discount */}
                     {!soldOut && discount > 0 && (
                       <div className="absolute top-4 left-4 z-10">
                         <span className="bg-red-600 text-white px-3 py-1 text-sm font-semibold rounded-full">
                           -{discount}%
+                        </span>
+                      </div>
+                    )}
+
+                    {/* "Осталось 1 штука" — только для CHELSEA BLACK/BLUE */}
+                    {isLowStock && (
+                      <div className="absolute top-4 left-4 z-10">
+                        <span className="bg-orange-600 text-white px-4 py-1 text-sm font-semibold uppercase tracking-wide rounded shadow-lg">
+                          Осталось 1 шт
                         </span>
                       </div>
                     )}
