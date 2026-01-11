@@ -66,7 +66,7 @@ const Catalog = () => {
     }
   ];
 
-  const availableProducts = ["CHELSEA BLACK/BLUE", "Roland Tortoise White", "Roland Tortoise Blue Chameleon"];
+  const availableProducts = ["Roland Tortoise White", "Roland Tortoise Blue Chameleon"];
 
   const parsePrice = (priceString) => {
     return parseInt(priceString.toString().replace(/[^\d]/g, '')) || 0;
