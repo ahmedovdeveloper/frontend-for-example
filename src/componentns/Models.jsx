@@ -7,45 +7,47 @@ const Models = () => {
 
   const categories = [
     { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606165/uploads/rveej32gm4msypue44ku.jpg', 
-      title: 'GLASSES',
-      bgColor: 'bg-stone-200'
-    },
-    { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606224/uploads/mygac9eobrvtxyo5xpxj.jpg', 
+      src: 'https://www.dropbox.com/scl/fi/ikmt3duzgmuxwn4czgyry/DSC05667.JPG?rlkey=e7wuje5dnjn1593gq5t06v07p&st=nfhiz45c&raw=1',
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606301/uploads/ir7moul1zk6shvqweuup.jpg', 
+      src: 'https://www.dropbox.com/scl/fi/jq37jmk9ile912uey9l6q/IMG_6169.JPG?rlkey=s64wx11mqrcvwvq2yt205y8eh&st=u8ushhmn&raw=1', 
+      title: 'GLASSES',
+      bgColor: 'bg-stone-200'
+    },
+    { 
+      src: 'https://www.dropbox.com/scl/fi/m6hpscxvs95mth4sihau2/DSC05666.JPG?rlkey=athf72n9crnhd06ekqithnp0v&st=5zhmz7n8&raw=1', 
+      title: 'GLASSES',
+      bgColor: 'bg-stone-200'
+    },
+     
+    { 
+      src: 'https://www.dropbox.com/scl/fi/y3ecyzm68t27xnhtlnskz/IMG_6259.JPG?rlkey=l81v3gv39ynln60d1gr5i6pp8&st=mgp1rvqj&raw=1', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606373/uploads/sgs6olkomgusazuvicgj.jpg', 
-      title: 'GLASSES',
-      bgColor: 'bg-stone-200'
-    },
-    { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606497/uploads/ntqnddvbojppifdo16bf.jpg', 
-      title: 'GLASSES',
-      bgColor: 'bg-stone-200'
-    },
-    { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606675/uploads/m5myymtyuqwslfietruu.jpg', 
+      src: 'https://www.dropbox.com/scl/fi/brkb3vgtit7u5hersudjo/IMG_8096.JPG?rlkey=tiv8sim872vmt0fik14vzd3rd&st=fy7c2e1h&raw=1', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
      { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606645/uploads/ftvzc2l5l87mc5hc2mhj.jpg', 
+      src: 'https://www.dropbox.com/scl/fi/brkb3vgtit7u5hersudjo/IMG_8096.JPG?rlkey=tiv8sim872vmt0fik14vzd3rd&st=fy7c2e1h&raw=1', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
     },
     { 
-      src: 'https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767606536/uploads/eiyxm8j9iunpcjkclqef.jpg', 
+      src: 'https://www.dropbox.com/scl/fi/i0phdvch1nq6si0doyeo9/IMG_6254.JPG?rlkey=631nuiz3j3jy13rmynnuv82jn&st=73wl9kol&raw=1', 
       title: 'GLASSES',
       bgColor: 'bg-stone-200'
-    }
+    },
+    { 
+      src: 'https://www.dropbox.com/scl/fi/7bvmn440xszzninpxjfav/IMG_6171.JPG?rlkey=opd5mjn8skbcs7w9mcjqxre0c&st=s4lsg6g7&raw=1',
+      title: 'GLASSES',
+      bgColor: 'bg-stone-200'
+    },
+   
   ];
 
   React.useEffect(() => {
