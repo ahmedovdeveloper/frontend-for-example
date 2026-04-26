@@ -8,66 +8,69 @@ const ProductView = () => {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Той самий масив продуктів, що й у ProductCards (з уніфікованими зображеннями)
-    const products = [
+   const products = [
     {
       _id: "1",
-      name: "CHELSEA BLACK/BLUE",
-      price: "549.000 uzs",
-      originalPrice: "549.000 uzs",
+      name: "HAM BLUE",
+      price: "699.000 uzs",
+      originalPrice: "699.000 uzs",
       images: [
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603549/uploads/xp8i1txivzp8ildi4uzt.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603609/uploads/nlyorrjsoj1ydy2o6zqf.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603663/uploads/udizegkmpbtxi2fyibp7.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603724/uploads/am41thknuqhsxxnc9rq0.jpg"
+      "https://www.dropbox.com/scl/fi/51r5rvlq3wpljduasynk3/dcfb2dc8-7c59-47c7-a0ef-38f1cb961283.png?rlkey=woasigyi57d1x28whov6d9tc4&st=0qtz0628&raw=1",
+      "https://www.dropbox.com/scl/fi/6q4xzzckcxkz7albq1lru/45320f5c-8827-493e-9210-6ab3219de2a0.png?rlkey=nd7psrgk7wnl81ozcju0webow&st=gbrg2vkn&raw=1",
+      "https://www.dropbox.com/scl/fi/yt8f96mdly7hvu1cb9qo5/ChatGPT-Image-23-.-2026-.-21_18_25.png?rlkey=yd6a4zu9dk48jqh8wjlesmzo3&st=jpikameo&raw=1",
       ],
-      soldOut: false,
-      stockLeft: 1 // ← Добавляем количество оставшихся штук только для этого товара
+      stockLeft: 20
     },
     {
       _id: "2",
-      name: "Roland Tortoise White",
-      price: "499.000 uzs",
-      originalPrice: "499.000 uzs",
+      name: "HAM  BLACK",
+      price: "699.000 uzs",
+      originalPrice: "699.000",
       images: [
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603775/uploads/kt8txzbiywzekwosfryi.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603810/uploads/sk5duovigsrfhctsbhii.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603857/uploads/mfwmcn8eekjhwnozlfm3.png",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603961/uploads/jc9l7jlrlwdigtyrsdtg.jpg"
+        "https://www.dropbox.com/scl/fi/ya4e0iy6lz91qil1m8nd1/610c7bc8-2b85-409f-89cd-4f89729f7219.png?rlkey=zgultmom8mr4ai6hbqy0rowei&st=agoot949&raw=1",
+        "https://www.dropbox.com/scl/fi/rjksqe39ievm7czvepo3g/66f1afeb-1066-4ef2-872f-19a12663ca06.png?rlkey=lvzzlh27ombytibxqmuigvcfx&st=flzaycbz&raw=1",
+        "https://www.dropbox.com/scl/fi/evuzctqcqnyu3cxybq13b/808095f4-d849-4db3-baae-9018ee9e07e3-removebg-preview.png?rlkey=oq446iu6zw5t9bux50azgw9f4&st=ehm4q9uw&raw=1"
       ],
-      soldOut: false,
-      stockLeft: null // Нет ограничения
+      stockLeft: null
     },
     {
       _id: "3",
-      name: "Roland Tortoise Blue Chameleon",
-      price: "599.000 uzs",
-      originalPrice: "599.000 uzs",
+      name: "HAM ORANGE",
+      price: "699.000 uzs",
+      originalPrice: "699.000 uzs",
       images: [
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767603995/uploads/lsh05uikpt4fpn6yyhyp.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604016/uploads/jgbpn77axon8zj8vkmzu.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604084/uploads/tu4o27x0nkak2exmurri.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604138/uploads/kmc2fixm7ncrtrawp8pn.jpg",
+       "https://www.dropbox.com/scl/fi/dtm14esalecqlm58gr9lp/2927ee7a-6cc4-4a11-8d70-6499e928592f-removebg-preview.png?rlkey=xnzioog0eu5q4i4bgd5b06412&st=1saqmuyf&raw=1",
+       "https://www.dropbox.com/scl/fi/r3t1eh0k5939xgdqr101b/716ff3ef-3506-41d3-a5c1-0c537ffcd030-removebg-preview.png?rlkey=ogxovpmq7j4cfwo96c0ymn5ir&st=9ndq3gah&raw=1",
+       "https://www.dropbox.com/scl/fi/fatf934erz2fzukcnpbcc/fbbd15a1-2d0a-401b-923e-adadc349ae88-removebg-preview-1.png?rlkey=loowwgjuisfthlrg94eejmk99&st=0rcluj3f&raw=1"
       ],
-      soldOut: false,
       stockLeft: null
     },
     {
       _id: "4",
-      name: "Chelsea Black Chameleon",
-      price: "455.000 uzs",
-      originalPrice: "700.000 uzs",
+      name: "HAM WHITE",
+      price: "699.000 uzs",
+      originalPrice: "699.000 uzs",
       images: [
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604495/uploads/o3mimvv3nqoyawn3ogh0.png",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604205/uploads/ak7te1svbacdzjg8maly.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604238/uploads/jdlfuherprkc9uapoe2g.jpg",
-        "https://res.cloudinary.com/dnw8u1bxr/image/upload/v1767604260/uploads/ischhwur4kc1t0b0oftw.jpg",
+        "https://www.dropbox.com/scl/fi/q00o8pblnj2ryjg4ddego/8e62e6cb-6721-43e2-aafb-cc73ad353b65-removebg-preview.png?rlkey=0zoiepap5wp0pvwjbxkc2lp77&st=yjeuehd8&raw=1",
+        "https://www.dropbox.com/scl/fi/hpa5bk797rhvlzs3yibvm/9d9a1fb6-f447-4a7e-8dd3-d500cf4e8a23-removebg-preview.png?rlkey=sjbjh6y3k8m7scev5p7e27tcz&st=7npck08l&raw=1",
+        "https://www.dropbox.com/scl/fi/57qjj5djjqw432r7uw6nq/e6f15d25-8ad5-4bba-bd89-2e5160eb804e-removebg-preview.png?rlkey=ru9edhe3vx3sy0tzvir3847nw&st=fcbfgksi&raw=1"
       ],
-      soldOut: false,
+      stockLeft: null
+    },
+    {
+      _id: "5",
+      name: "HAM CHAMELEON/BLACK",
+      price: "699.000 uzs",
+      originalPrice: "699.000 uzs",
+      images: [
+       "https://www.dropbox.com/scl/fi/uj3w8qyxbnxyfs96a7aw0/5429570636700390183-removebg-preview.png?rlkey=j1yebgu0xvvpdqr52lsf80m4d&raw=1",
+        "https://www.dropbox.com/scl/fi/lkjmreywvw8fxexx8jpg9/48fe3346-9d06-4eaa-9135-bc01b8ef94e0-removebg-preview.png?rlkey=wiri9cjqnl6yptlnc71vimjao&raw=1",
+       "https://www.dropbox.com/scl/fi/62juktfhd4w1nu2yl2qr7/c6ee2c2b-6798-4f28-bab2-b95754dbd14f-removebg-preview.png?rlkey=v64kolfl851i3vo7a2109yrzk&st=fw6ul7te&raw=1",
+       "https://www.dropbox.com/scl/fi/w5efdbu3xtctueukpr34d/34f3ecf3-7bf9-49c0-9215-6c646b7f225d-removebg-preview.png?rlkey=9ygirsin3a39wo27mxn4u6nhk&st=fa0ausog&raw=1"
+      ],
       stockLeft: null
     }
   ];
-
   // Правильний пошук продукту за _id (рядок)
   const product = products.find(p => p._id === id);
 
