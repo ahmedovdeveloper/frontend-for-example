@@ -98,7 +98,7 @@ export const Hero = () => {
 
             <motion.h1
               variants={itemVariants}
-              className="text-6xl md:text-7xl lg:text-8xl font-luxury font-bold mb-6 leading-tight tracking-tighter"
+              className="text-4xl md:text-5xl lg:text-7xl font-luxury font-bold mb-6 leading-tight tracking-tighter"
             >
               HAM
               <br />
@@ -132,15 +132,15 @@ export const Hero = () => {
             {/* Stats */}
             <motion.div variants={itemVariants} className="mt-12 flex gap-8">
               <div>
-                <p className="text-3xl font-luxury font-bold text-white mb-1">500+</p>
+                <p className="text-2xl md:text-3xl font-luxury font-bold text-white mb-1">500+</p>
                 <p className="text-sm text-gray-500">Довольных клиентов</p>
               </div>
               <div>
-                <p className="text-3xl font-luxury font-bold text-white mb-1">4.9★</p>
+                <p className="text-2xl md:text-3xl font-luxury font-bold text-white mb-1">4.9★</p>
                 <p className="text-sm text-gray-500">Средний рейтинг</p>
               </div>
               <div>
-                <p className="text-3xl font-luxury font-bold text-white mb-1">4</p>
+                <p className="text-2xl md:text-3xl font-luxury font-bold text-white mb-1">4</p>
                 <p className="text-sm text-gray-500">Коллекции</p>
               </div>
             </motion.div>

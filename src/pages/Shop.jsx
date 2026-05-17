@@ -58,10 +58,10 @@ export const Shop = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-6xl md:text-7xl font-luxury font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-luxury font-bold mb-4">
             Коллекции
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-base md:text-lg">
             Исследуйте нашу отобранную коллекцию премиум солнцезащитных очков
           </p>
         </motion.div>

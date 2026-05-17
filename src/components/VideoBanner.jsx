@@ -23,7 +23,7 @@ export const VideoBanner = () => {
           className="relative rounded-3xl overflow-hidden shadow-2xl"
         >
           <video
-            className="w-full h-[600px] object-cover"
+            className="w-full h-64 sm:h-96 md:h-150 object-cover"
             autoPlay
             muted
             loop

@@ -39,9 +39,9 @@ export const Navbar = () => {
           <Link to="/" className="flex items-center">
             <motion.h1
               whileHover={{ scale: 1.05 }}
-              className="text-3xl font-luxury font-bold text-white tracking-wider"
+              className="text-2xl sm:text-3xl font-luxury font-bold text-white tracking-wider"
             >
-              <img src={logo} alt="Logo"  className='w-[120px] h-[120px]'/>
+              <img src={logo} alt="Logo" className='w-20 sm:w-24 md:w-32 h-16 sm:h-20 md:h-24'/>
             </motion.h1>
           </Link>
 

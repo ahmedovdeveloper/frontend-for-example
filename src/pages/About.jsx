@@ -12,7 +12,7 @@ export const About = () => {
             transition={{ duration: 0.8 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-6xl md:text-7xl font-luxury font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-luxury font-bold mb-6">
               О бренде HAM
             </h1>
             <p className="text-xl text-gray-400 leading-relaxed">
@@ -46,7 +46,7 @@ export const About = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="rounded-2xl overflow-hidden h-96 image-zoom glass"
+              className="rounded-2xl overflow-hidden h-72 sm:h-96 image-zoom glass"
             >
               <img
                 src="https://www.dropbox.com/scl/fi/jc0ttpc0g9khbw7aof9i3/DSC01289.JPG?rlkey=jnr67hk9e40k5bprqxzzqty9t&raw=1"
@@ -138,7 +138,7 @@ export const About = () => {
                 viewport={{ once: true }}
                 className="flex gap-8 items-center"
               >
-                <div className="w-32 flex-shrink-0">
+                <div className="w-32 shrink-0">
                   <p className="text-3xl font-luxury font-bold text-white">{milestone.year}</p>
                 </div>
                 <motion.div

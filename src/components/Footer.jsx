@@ -65,7 +65,7 @@ export const Footer = () => {
           {/* Brand */}
           <motion.div variants={itemVariants}>
             <Link to="/">
-              <h3 className="text-2xl font-luxury font-bold text-white mb-4 tracking-wider">
+              <h3 className="text-xl sm:text-2xl font-luxury font-bold text-white mb-4 tracking-wider">
                 HAM
               </h3>
             </Link>

@@ -11,7 +11,7 @@ export const Cart = () => {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-6xl font-luxury font-bold mb-12 text-white"
+          className="text-4xl md:text-5xl lg:text-6xl font-luxury font-bold mb-12 text-white"
         >
           Корзина покупок
         </motion.h1>
@@ -22,7 +22,7 @@ export const Cart = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-20"
           >
-            <svg className="w-24 h-24 mx-auto mb-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 mx-auto mb-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
             <h2 className="text-3xl font-luxury font-bold text-white mb-4">Твоя корзина пуста</h2>

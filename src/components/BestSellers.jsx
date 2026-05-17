@@ -23,7 +23,7 @@ export const BestSellers = () => {
           <span className="text-sm font-semibold text-gray-400 uppercase tracking-[2px]">
             Отобранная коллекция
           </span>
-          <h2 className="text-5xl md:text-6xl font-luxury font-bold mt-4 mb-4">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-luxury font-bold mt-4 mb-4">
             Бестселлеры
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto text-lg">

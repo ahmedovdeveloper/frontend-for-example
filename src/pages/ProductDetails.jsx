@@ -148,7 +148,7 @@ export const ProductDetails = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="text-6xl font-luxury font-bold text-white mb-3 leading-tight"
+                  className="text-4xl md:text-5xl lg:text-6xl font-luxury font-bold text-white mb-3 leading-tight"
                 >
                   {product.name}
                 </motion.h1>

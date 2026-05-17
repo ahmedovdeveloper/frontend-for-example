@@ -55,7 +55,7 @@ export const Contact = () => {
             transition={{ duration: 0.8 }}
             className="text-center max-w-2xl mx-auto"
           >
-            <h1 className="text-6xl md:text-7xl font-luxury font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-luxury font-bold mb-6">
               Свяжись с нами
             </h1>
             <p className="text-xl text-gray-400">

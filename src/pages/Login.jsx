@@ -46,7 +46,7 @@ export const Login = () => {
         >
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-luxury font-bold text-white mb-2">HAM</h1>
+            <h1 className="text-3xl md:text-4xl font-luxury font-bold text-white mb-2">HAM</h1>
             <p className="text-gray-400">
               {isLogin ? 'Добро пожаловать' : 'Присоединись к сообществу HAM'}
             </p>
