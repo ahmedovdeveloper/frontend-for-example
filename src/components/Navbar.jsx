@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
-
+import logo from "../assets/logo1.png"
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -41,7 +41,7 @@ export const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               className="text-3xl font-luxury font-bold text-white tracking-wider"
             >
-              mihlievs
+              <img src={logo} alt="Logo"  className='w-[120px] h-[120px]'/>
             </motion.h1>
           </Link>
 
