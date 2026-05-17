@@ -81,7 +81,7 @@ export const Hero = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center w-full"
         >
           {/* Left: Text Content */}
           <motion.div variants={textVariants} className="z-10">
