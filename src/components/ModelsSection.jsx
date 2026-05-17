@@ -10,13 +10,14 @@ const images = [
   'https://www.dropbox.com/scl/fi/7bvmn440xszzninpxjfav/IMG_6171.JPG?rlkey=opd5mjn8skbcs7w9mcjqxre0c&st=s4lsg6g7&raw=1',
 ];
 
-const CARD_W = 360;
+const CARD_W = typeof window !== 'undefined' ? (window.innerWidth < 768 ? 280 : 360) : 360;
 const CARD_GAP = 20;
 const STEP = CARD_W + CARD_GAP;
 
 export const ModelsSection = () => {
   const [current, setCurrent] = useState(0);
   const [loaded, setLoaded] = useState({});
+  const [cardWidth] = useState(() => typeof window !== 'undefined' ? (window.innerWidth < 768 ? 280 : 360) : 360);
 
   const dragRef = useRef({ active: false, startX: 0, currentX: 0, lastOffset: 0 });
   const trackRef = useRef(null);
@@ -26,27 +27,30 @@ export const ModelsSection = () => {
   const goTo = useCallback((idx) => {
     const clamped = Math.max(0, Math.min(count - 1, idx));
     setCurrent(clamped);
+    const step = cardWidth + CARD_GAP;
     if (trackRef.current) {
       trackRef.current.style.transition = 'transform 0.52s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-      trackRef.current.style.transform = `translateX(${-clamped * STEP}px)`;
+      trackRef.current.style.transform = `translateX(${-clamped * step}px)`;
     }
-  }, [count]);
+  }, [count, cardWidth]);
 
   const onPointerDown = (e) => {
+    const step = cardWidth + CARD_GAP;
     isDragging.current = false;
-    dragRef.current = { active: true, startX: e.clientX, currentX: e.clientX, lastOffset: -current * STEP };
+    dragRef.current = { active: true, startX: e.clientX, currentX: e.clientX, lastOffset: -current * step };
     if (trackRef.current) trackRef.current.style.transition = 'none';
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
   const onPointerMove = (e) => {
     if (!dragRef.current.active) return;
+    const step = cardWidth + CARD_GAP;
     dragRef.current.currentX = e.clientX;
     const delta = e.clientX - dragRef.current.startX;
     if (Math.abs(delta) > 5) isDragging.current = true;
     const newX = dragRef.current.lastOffset + delta;
     const maxX = 0;
-    const minX = -(count - 1) * STEP;
+    const minX = -(count - 1) * step;
     const bounded = newX > maxX
       ? maxX + (newX - maxX) * 0.12
       : newX < minX
@@ -75,16 +79,16 @@ export const ModelsSection = () => {
       justifyContent: 'center',
       overflow: 'hidden',
       position: 'relative',
-      padding: '80px 0',
+      padding: 'clamp(40px, 10vw, 80px) 0',
       userSelect: 'none',
     }}>
 
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: 56, position: 'relative', zIndex: 2 }}>
+      <div style={{ textAlign: 'center', marginBottom: 'clamp(32px, 6vw, 56px)', position: 'relative', zIndex: 2 }}>
     
         <h2 style={{
-          fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 300, color: '#f0ebe4',
-          letterSpacing: '-0.025em', lineHeight: 1.08, margin: 0,
+          fontSize: 'clamp(28px, 5vw, 64px)', fontWeight: 300, color: '#f0ebe4',
+          letterSpacing: '-0.025em', lineHeight: 1.08, margin: 0, padding: '0 16px',
           fontFamily: "'Cormorant Garamond', Georgia, serif",
         }}>
           Наша коллекция
@@ -96,7 +100,7 @@ export const ModelsSection = () => {
         style={{
           position: 'relative', zIndex: 2,
           overflow: 'hidden',
-          paddingLeft: 'max(40px, calc((100vw - 800px) / 2))',
+          paddingLeft: 'max(16px, clamp(20px, 4vw, 40px))',
           cursor: 'grab',
         }}
         onPointerDown={onPointerDown}
@@ -121,7 +125,7 @@ export const ModelsSection = () => {
                 key={idx}
                 onClick={() => { if (!isDragging.current) goTo(idx); }}
                 style={{
-                  width: CARD_W,
+                  width: cardWidth,
                   flexShrink: 0,
                   borderRadius: 3,
                   overflow: 'hidden',
@@ -161,18 +165,18 @@ export const ModelsSection = () => {
                   }}>
                     <div>
                       <p style={{
-                        color: '#8a7a68', fontSize: 9, letterSpacing: '0.22em',
+                        color: '#8a7a68', fontSize: 'clamp(8px, 1.5vw, 9px)', letterSpacing: '0.22em',
                         textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif",
                         margin: '0 0 3px',
                       }}>Collection</p>
                       <h3 style={{
-                        color: '#f0ebe4', fontSize: 20, fontWeight: 300,
+                        color: '#f0ebe4', fontSize: 'clamp(16px, 3vw, 20px)', fontWeight: 300,
                         margin: 0, fontFamily: "'Cormorant Garamond', Georgia, serif",
                         letterSpacing: '0.02em',
                       }}>Glasses</h3>
                     </div>
                     <span style={{
-                      color: '#6a5a48', fontSize: 11,
+                      color: '#6a5a48', fontSize: 'clamp(10px, 2vw, 11px)',
                       fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.05em',
                     }}>
                       {String(idx + 1).padStart(2, '0')}
@@ -188,8 +192,9 @@ export const ModelsSection = () => {
       {/* Controls */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        maxWidth: 800, margin: '44px auto 0', padding: '0 40px',
+        maxWidth: 'clamp(280px, 90vw, 800px)', margin: 'clamp(24px, 6vw, 44px) auto 0', padding: '0 clamp(16px, 4vw, 40px)',
         width: '100%', boxSizing: 'border-box', position: 'relative', zIndex: 2,
+        flexWrap: 'wrap', gap: 'clamp(16px, 4vw, 20px)',
       }}>
         {/* Dots */}
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -206,8 +211,8 @@ export const ModelsSection = () => {
         </div>
 
         {/* Counter + Arrows */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <span style={{ color: '#444', fontSize: 11, fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.1em' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(12px, 3vw, 20px)' }}>
+          <span style={{ color: '#444', fontSize: 'clamp(10px, 2vw, 11px)', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.1em', whiteSpace: 'nowrap' }}>
             {String(current + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
           </span>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -217,10 +222,10 @@ export const ModelsSection = () => {
                 onClick={() => goTo(current + dir)}
                 disabled={dir === -1 ? current === 0 : current === count - 1}
                 style={{
-                  width: 40, height: 40, borderRadius: '50%',
+                  width: 'clamp(32px, 8vw, 40px)', height: 'clamp(32px, 8vw, 40px)', borderRadius: '50%',
                   border: '1px solid #222', background: 'transparent',
                   color: (dir === -1 ? current === 0 : current === count - 1) ? '#2a2a2a' : '#c8b89a',
-                  fontSize: 16,
+                  fontSize: 'clamp(14px, 3vw, 16px)',
                   cursor: (dir === -1 ? current === 0 : current === count - 1) ? 'not-allowed' : 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'all 0.3s ease', fontFamily: 'serif',
