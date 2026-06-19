@@ -22,7 +22,8 @@ export const Navbar = () => {
     { label: 'Магазин', path: '/shop' },
     { label: 'Примерить', path: '/try-on' },
   ];
-
+// hello world
+   
   return (
     <motion.nav
       initial={{ y: -100 }}
