@@ -20,6 +20,7 @@ export const Navbar = () => {
   const navItems = [
     { label: 'Главная', path: '/' },
     { label: 'Магазин', path: '/shop' },
+    { label: 'Примерить', path: '/try-on' },
   ];
 
   return (

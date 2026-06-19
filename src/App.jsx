@@ -12,15 +12,17 @@ import { Contact } from './pages/Contact';
 import { Login } from './pages/Login';
 import { Checkout } from './pages/Checkout';
 import './index.css';
+import TryOnPage from './pages/TryPage';
 
 function App() {
   return (
     <Router>
       <CartProvider>
-        <Navbar />
+        <Navbar className="mb-10" />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/try-on" element={<TryOnPage />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />

@@ -32,7 +32,7 @@ export const Home = () => {
   ];
 
   return (
-    <div className="bg-black">
+    <div className="bg-black pt-[100px]">
       <Hero />
       <VideoBanner />
       <BestSellers />
