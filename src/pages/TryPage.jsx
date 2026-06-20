@@ -51,7 +51,7 @@ const LM = {
   NOSE_BRIDGE:     6,
 };
 
-// Preload image → HTMLImageElement (кешируем)
+// Preload image → HTMLImageElement
 const imageCache = {};
 function loadImg(src) {
   if (imageCache[src]) return imageCache[src];
@@ -61,7 +61,6 @@ function loadImg(src) {
   return img;
 }
 
-// ─── AR overlay: рисуем PNG очков поверх лица ───────────────────────────────
 function drawARGlasses(ctx, lm, cw, ch, glassesItem) {
   const img = loadImg(glassesItem.src);
   if (!img.complete || img.naturalWidth === 0) return;
@@ -74,36 +73,26 @@ function drawARGlasses(ctx, lm, cw, ch, glassesItem) {
   const rOuter  = p(LM.RIGHT_EYE_OUTER);
   const lInner  = p(LM.LEFT_EYE_INNER);
   const rInner  = p(LM.RIGHT_EYE_INNER);
-  const lTop    = p(LM.LEFT_EYE_TOP);
-  const rTop    = p(LM.RIGHT_EYE_TOP);
-  const lBot    = p(LM.LEFT_EYE_BOT);
-  const rBot    = p(LM.RIGHT_EYE_BOT);
 
-  // ── Центры глаз
   const lCx = (lOuter.x + lInner.x) / 2;
   const lCy = (lOuter.y + lInner.y) / 2;
   const rCx = (rOuter.x + rInner.x) / 2;
   const rCy = (rOuter.y + rInner.y) / 2;
 
-  // ── Roll (наклон головы)
   const dx    = rTemple.x - lTemple.x;
   const dy    = rTemple.y - lTemple.y;
   const roll  = Math.atan2(dy, dx);
 
-  // ── Yaw (поворот влево/вправо) из z-координат висков
   const faceW  = Math.hypot(dx, dy);
   const rawYaw = (rTemple.z - lTemple.z) * 3.8;
   const yaw    = Math.max(-1, Math.min(1, rawYaw));
 
-  // ── Размер: от виска до виска × 1.15
   const glassesW = faceW * 1.35;
   const glassesH = glassesW * (img.naturalHeight / img.naturalWidth);
 
-  // ── Центр между глазами
   const cx = (lCx + rCx) / 2;
   const cy = (lCy + rCy) / 2;
 
-  // ── Перспективное сжатие при yaw
   const scaleX = Math.cos(yaw * 0.85);
 
   ctx.save();
@@ -122,7 +111,6 @@ function drawARGlasses(ctx, lm, cw, ch, glassesItem) {
   ctx.restore();
 }
 
-// ─── Компонент ───────────────────────────────────────────────────────────────
 export default function TryOnPage() {
   const [selected,     setSelected]     = useState(glasses[0]);
   const [cameraActive, setCameraActive] = useState(false);
@@ -141,16 +129,13 @@ export default function TryOnPage() {
 
   useEffect(() => {
     selectedRef.current = selected;
-    // Прогрев картинки при выборе
     loadImg(selected.src);
   }, [selected]);
 
-  // Прогреть все картинки заранее
   useEffect(() => {
     glasses.forEach((g) => loadImg(g.src));
   }, []);
 
-  // ── Загрузка MediaPipe
   useEffect(() => {
     const load = (src) =>
       new Promise((res, rej) => {
@@ -168,7 +153,6 @@ export default function TryOnPage() {
     })();
   }, []);
 
-  // ── Render loop 60fps
   const renderLoop = useCallback(() => {
     const canvas = overlayCanvasRef.current;
     const video  = videoRef.current;
@@ -190,7 +174,6 @@ export default function TryOnPage() {
     animRef.current = requestAnimationFrame(renderLoop);
   }, []);
 
-  // ── initFaceMesh
   const initFaceMesh = useCallback(() => {
     if (!window.FaceMesh) { console.warn("FaceMesh not loaded"); return; }
 
@@ -215,7 +198,6 @@ export default function TryOnPage() {
 
     faceMeshRef.current = fm;
 
-    // Отправляем кадры ~30fps
     let busy = false;
     const sendFrame = async () => {
       const video = videoRef.current;
@@ -231,7 +213,6 @@ export default function TryOnPage() {
     animRef.current = requestAnimationFrame(renderLoop);
   }, [renderLoop]);
 
-  // ── startCamera
   const startCamera = async () => {
     setIsLoading(true);
     setError(null);
@@ -281,7 +262,6 @@ export default function TryOnPage() {
     setTimeout(() => initFaceMesh(), 400);
   };
 
-  // ── stopCamera
   const stopCamera = useCallback(() => {
     if (animRef.current)      cancelAnimationFrame(animRef.current);
     if (sendTimerRef.current) clearTimeout(sendTimerRef.current);
@@ -300,39 +280,66 @@ export default function TryOnPage() {
   useEffect(() => () => stopCamera(), [stopCamera]);
 
   return (
-    <div className="pt-[120px] flex h-screen bg-[#0a0a0a] text-white font-sans overflow-hidden">
+    <div className="pt-[60px] md:pt-[120px] flex flex-col md:flex-row h-screen bg-[#0a0a0a] text-white font-sans overflow-hidden">
 
-      {/* ── Левая панель ── */}
-      <div className="w-72 flex-shrink-0 bg-[#111] border-r border-white/10 flex flex-col">
-        <div className="px-5 py-5 border-b border-white/10">
+      {/* ── Панель выбора очков ──
+          Mobile: горизонтальный скролл снизу
+          Desktop: вертикальная левая колонка
+      */}
+      <div className="
+        order-2 md:order-1
+        md:w-72 md:flex-shrink-0
+        bg-[#111]
+        md:border-r border-t md:border-t-0 border-white/10
+        flex flex-col
+        md:h-full
+        h-auto
+      ">
+        {/* Заголовок — только на десктопе */}
+        <div className="hidden md:block px-5 py-5 border-b border-white/10">
           <p className="text-[10px] tracking-[0.2em] text-white/40 uppercase mb-1">Mikhliev's</p>
           <h1 className="text-lg font-semibold tracking-tight">Примерить</h1>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
+        {/* Список очков */}
+        <div className="
+          flex md:flex-col
+          flex-row
+          overflow-x-auto md:overflow-x-hidden
+          overflow-y-hidden md:overflow-y-auto
+          px-3 py-3
+          gap-2
+          flex-shrink-0 md:flex-shrink
+          scrollbar-none
+        ">
           {glasses.map((g) => (
             <button
               key={g.id}
               onClick={() => setSelected(g)}
-              className={`w-full rounded-xl overflow-hidden border transition-all duration-200 text-left ${
-                selected.id === g.id
+              className={`
+                flex-shrink-0
+                w-36 md:w-full
+                rounded-xl overflow-hidden border transition-all duration-200 text-left
+                ${selected.id === g.id
                   ? "border-white/60 bg-white/10 shadow-lg shadow-white/5"
                   : "border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20"
-              }`}
+                }
+              `}
             >
-              <div className="bg-white w-full h-28 flex items-center justify-center overflow-hidden">
+              {/* Превью очков */}
+              <div className="bg-white w-full h-20 md:h-28 flex items-center justify-center overflow-hidden">
                 <img src={g.src} alt={g.name} className="w-full h-full object-contain p-2" />
               </div>
-              <div className="px-3 py-2.5">
-                <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-sm font-medium">{g.name}</span>
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${
+              <div className="px-2.5 md:px-3 py-2 md:py-2.5">
+                <div className="flex items-center justify-between mb-0.5 gap-1">
+                  <span className="text-xs md:text-sm font-medium truncate">{g.name}</span>
+                  <span className={`text-[8px] md:text-[9px] px-1.5 py-0.5 rounded-full font-medium flex-shrink-0 ${
                     g.tag === "Солнцезащитные"
                       ? "bg-amber-500/20 text-amber-400"
                       : "bg-blue-500/20 text-blue-400"
                   }`}>{g.tag}</span>
                 </div>
-                <p className="text-[10px] text-white/40 leading-tight">{g.color}</p>
+                <p className="text-[9px] md:text-[10px] text-white/40 leading-tight line-clamp-2">{g.color}</p>
               </div>
             </button>
           ))}
@@ -340,42 +347,57 @@ export default function TryOnPage() {
       </div>
 
       {/* ── Основная область ── */}
-      <div className="flex-1 flex flex-col">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0d0d0d]">
-          <div className="flex items-center gap-3">
+      <div className="order-1 md:order-2 flex-1 flex flex-col min-h-0">
+
+        {/* Статусбар */}
+        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-white/10 bg-[#0d0d0d]">
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Название бренда — только мобильно */}
+            <span className="md:hidden text-xs font-semibold tracking-tight mr-1">Mikhliev's</span>
             <div
-              className="w-2 h-2 rounded-full transition-colors duration-300"
+              className="w-2 h-2 rounded-full transition-colors duration-300 flex-shrink-0"
               style={{ background: cameraActive ? (faceDetected ? "#22c55e" : "#f59e0b") : "#444" }}
             />
-            <span className="text-sm text-white/60">
-              {!cameraActive ? "Камера выключена" : faceDetected ? "AR-эффект активен" : "Смотрите в камеру..."}
+            <span className="text-xs md:text-sm text-white/60">
+              {!cameraActive
+                ? "Камера выключена"
+                : faceDetected
+                ? "AR-эффект активен"
+                : "Смотрите в камеру..."}
             </span>
           </div>
-          <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full">
-            <span className="text-xs text-white/50">Модель:</span>
-            <span className="text-xs font-medium">{selected.name}</span>
+          <div className="flex items-center gap-1.5 md:gap-2 bg-white/5 px-2.5 md:px-3 py-1 md:py-1.5 rounded-full">
+            <span className="text-[10px] md:text-xs text-white/50">Модель:</span>
+            <span className="text-[10px] md:text-xs font-medium truncate max-w-[80px] md:max-w-none">
+              {selected.name}
+            </span>
           </div>
         </div>
 
-        <div className="flex-1 relative bg-[#080808] overflow-hidden">
+        {/* Область камеры / заглушки */}
+        <div className="flex-1 relative bg-[#080808] overflow-hidden min-h-0">
           {!cameraActive ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 text-center">
-              <div className="w-48 h-32 bg-white/5 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center">
-                <img src={selected.src} alt={selected.name} className="w-full h-full object-contain p-3 bg-white" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 md:gap-6 text-center px-4">
+              <div className="w-36 h-24 md:w-48 md:h-32 bg-white/5 rounded-2xl border border-white/10 overflow-hidden flex items-center justify-center">
+                <img
+                  src={selected.src}
+                  alt={selected.name}
+                  className="w-full h-full object-contain p-3 bg-white"
+                />
               </div>
               <div>
-                <h2 className="text-xl font-semibold mb-1">{selected.name}</h2>
-                <p className="text-sm text-white/40">{selected.color}</p>
+                <h2 className="text-lg md:text-xl font-semibold mb-1">{selected.name}</h2>
+                <p className="text-xs md:text-sm text-white/40">{selected.color}</p>
               </div>
               {error && (
-                <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm px-4 py-3 rounded-xl max-w-xs">
+                <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-xs md:text-sm px-4 py-3 rounded-xl max-w-xs">
                   {error}
                 </div>
               )}
               <button
                 onClick={startCamera}
                 disabled={isLoading}
-                className="bg-white text-black font-semibold px-8 py-3.5 rounded-full hover:bg-white/90 transition-all disabled:opacity-50 text-sm"
+                className="bg-white text-black font-semibold px-6 md:px-8 py-3 md:py-3.5 rounded-full hover:bg-white/90 active:scale-95 transition-all disabled:opacity-50 text-sm"
               >
                 {isLoading ? "Подключение..." : "Включить камеру"}
               </button>
@@ -394,10 +416,10 @@ export default function TryOnPage() {
                 className="absolute inset-0 w-full h-full pointer-events-none"
                 style={{ transform: "scaleX(-1)" }}
               />
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
+              <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2">
                 <button
                   onClick={stopCamera}
-                  className="bg-black/50 backdrop-blur-md border border-white/20 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-white/20 transition-all"
+                  className="bg-black/50 backdrop-blur-md border border-white/20 text-white px-5 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium hover:bg-white/20 active:scale-95 transition-all"
                 >
                   Выключить камеру
                 </button>
