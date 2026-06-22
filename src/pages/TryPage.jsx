@@ -36,7 +36,6 @@ const glasses = [
   },
 ];
 
-// MediaPipe landmark indices
 const LM = {
   LEFT_EYE_OUTER:  33,
   LEFT_EYE_INNER:  133,
@@ -51,7 +50,6 @@ const LM = {
   NOSE_BRIDGE:     6,
 };
 
-// Preload image → HTMLImageElement
 const imageCache = {};
 function loadImg(src) {
   if (imageCache[src]) return imageCache[src];
@@ -61,6 +59,8 @@ function loadImg(src) {
   return img;
 }
 
+// ── Ключевое изменение: рисуем с учётом display-размера canvas,
+//    а не нативного разрешения видео ──
 function drawARGlasses(ctx, lm, cw, ch, glassesItem) {
   const img = loadImg(glassesItem.src);
   if (!img.complete || img.naturalWidth === 0) return;
@@ -73,33 +73,67 @@ function drawARGlasses(ctx, lm, cw, ch, glassesItem) {
   const rOuter  = p(LM.RIGHT_EYE_OUTER);
   const lInner  = p(LM.LEFT_EYE_INNER);
   const rInner  = p(LM.RIGHT_EYE_INNER);
+  const lTop    = p(LM.LEFT_EYE_TOP);
+  const rTop    = p(LM.RIGHT_EYE_TOP);
+  const lBot    = p(LM.LEFT_EYE_BOT);
+  const rBot    = p(LM.RIGHT_EYE_BOT);
 
   const lCx = (lOuter.x + lInner.x) / 2;
   const lCy = (lOuter.y + lInner.y) / 2;
   const rCx = (rOuter.x + rInner.x) / 2;
   const rCy = (rOuter.y + rInner.y) / 2;
 
-  const dx    = rTemple.x - lTemple.x;
-  const dy    = rTemple.y - lTemple.y;
-  const roll  = Math.atan2(dy, dx);
+  // Угол наклона по линии висков
+  const dx   = rTemple.x - lTemple.x;
+  const dy   = rTemple.y - lTemple.y;
+  const roll = Math.atan2(dy, dx);
 
-  const faceW  = Math.hypot(dx, dy);
-  const rawYaw = (rTemple.z - lTemple.z) * 3.8;
-  const yaw    = Math.max(-1, Math.min(1, rawYaw));
+  // ── Авто-размер: ширина между ВНЕШНИМИ углами глаз × коэффициент ──
+  const eyeSpanX = Math.hypot(rOuter.x - lOuter.x, rOuter.y - lOuter.y);
 
-  const glassesW = faceW * 1.35;
+  // Высота очков через вертикальный размер глаз
+  const leftEyeH  = Math.hypot(lTop.x - lBot.x, lTop.y - lBot.y);
+  const rightEyeH = Math.hypot(rTop.x - rBot.x, rTop.y - rBot.y);
+  const eyeH      = (leftEyeH + rightEyeH) / 2;
+
+  // Ширина очков = расстояние между внешними углами + немного по бокам
+  // Это адаптируется автоматически при любом размере лица и дистанции
+const glassesW = eyeSpanX * 1.85;
   const glassesH = glassesW * (img.naturalHeight / img.naturalWidth);
 
   const cx = (lCx + rCx) / 2;
   const cy = (lCy + rCy) / 2;
 
+  // Yaw через z-глубину висков
+  const faceW  = Math.hypot(dx, dy);
+  const rawYaw = (rTemple.z - lTemple.z) * 3.8;
+  const yaw    = Math.max(-1, Math.min(1, rawYaw));
   const scaleX = Math.cos(yaw * 0.85);
 
+  // Вертикальный сдвиг — чтобы очки сидели точно на глазах
+  const vertOffset = eyeH * 0.3;
+
   ctx.save();
-  ctx.translate(cx, cy);
+  ctx.translate(cx, cy - vertOffset);
   ctx.rotate(roll);
   ctx.scale(scaleX, 1);
 
+  // ── 50% прозрачность для линз ──
+  // Сначала рисуем оправу полностью непрозрачно, потом поверх линзы с alpha
+  // Самый простой способ: рисуем весь PNG с globalAlpha = 0.5,
+  // т.к. PNG уже содержит прозрачность оправы
+  ctx.globalAlpha = 0.5;
+  ctx.drawImage(
+    img,
+    -glassesW / 2,
+    -glassesH / 2,
+    glassesW,
+    glassesH
+  );
+
+  // Оправа поверх с полной непрозрачностью (рисуем снова, но только визуально
+  // усиливаем — оправа тёмная, линзы светлые, второй слой восстанавливает оправу)
+  ctx.globalAlpha = 0.6;
   ctx.drawImage(
     img,
     -glassesW / 2,
@@ -153,22 +187,57 @@ export default function TryOnPage() {
     })();
   }, []);
 
+  // ── ИСПРАВЛЕНИЕ МОБИЛЬНОГО ЭФФЕКТА ──
+  // Проблема: canvas имеет нативное разрешение видео (1280×720),
+  // но на экране занимает меньше места (object-cover обрезает).
+  // Решение: canvas рисуем в координатах DISPLAY-размера элемента,
+  // а MediaPipe landmarks умножаем на display-размер.
   const renderLoop = useCallback(() => {
     const canvas = overlayCanvasRef.current;
     const video  = videoRef.current;
     if (!canvas || !video) { animRef.current = requestAnimationFrame(renderLoop); return; }
 
-    const vw = video.videoWidth  || 640;
-    const vh = video.videoHeight || 480;
-    if (canvas.width !== vw || canvas.height !== vh) {
-      canvas.width = vw; canvas.height = vh;
+    // Берём ОТОБРАЖАЕМЫЙ размер элемента, а не нативное разрешение
+    const displayW = canvas.clientWidth  || video.clientWidth  || 640;
+    const displayH = canvas.clientHeight || video.clientHeight || 480;
+
+    // Устанавливаем canvas в display-разрешение (1:1 пикселей)
+    // с учётом devicePixelRatio для чёткости на ретине
+    const dpr = window.devicePixelRatio || 1;
+    const bufW = Math.round(displayW * dpr);
+    const bufH = Math.round(displayH * dpr);
+
+    if (canvas.width !== bufW || canvas.height !== bufH) {
+      canvas.width  = bufW;
+      canvas.height = bufH;
+      canvas.style.width  = `${displayW}px`;
+      canvas.style.height = `${displayH}px`;
     }
 
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, vw, vh);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, displayW, displayH);
 
     if (latestLandmarksRef.current) {
-      drawARGlasses(ctx, latestLandmarksRef.current, vw, vh, selectedRef.current);
+      // ── object-cover компенсация ──
+      // Видео может быть обрезано на экране, нужно учесть crop-offset
+      const vNatW = video.videoWidth  || 640;
+      const vNatH = video.videoHeight || 480;
+
+      const scaleToFit = Math.max(displayW / vNatW, displayH / vNatH);
+      const renderedW  = vNatW * scaleToFit;
+      const renderedH  = vNatH * scaleToFit;
+      const offsetX    = (displayW - renderedW) / 2;
+      const offsetY    = (displayH - renderedH) / 2;
+
+      // Пересчитываем landmark координаты с учётом crop
+      const adjustedLM = latestLandmarksRef.current.map((pt) => ({
+        x: (pt.x * renderedW + offsetX) / displayW,
+        y: (pt.y * renderedH + offsetY) / displayH,
+        z: pt.z,
+      }));
+
+      drawARGlasses(ctx, adjustedLM, displayW, displayH, selectedRef.current);
     }
 
     animRef.current = requestAnimationFrame(renderLoop);
@@ -282,10 +351,6 @@ export default function TryOnPage() {
   return (
     <div className="pt-[60px] md:pt-[120px] flex flex-col md:flex-row h-screen bg-[#0a0a0a] text-white font-sans overflow-hidden">
 
-      {/* ── Панель выбора очков ──
-          Mobile: горизонтальный скролл снизу
-          Desktop: вертикальная левая колонка
-      */}
       <div className="
         order-2 md:order-1
         md:w-72 md:flex-shrink-0
@@ -295,13 +360,11 @@ export default function TryOnPage() {
         md:h-full
         h-auto
       ">
-        {/* Заголовок — только на десктопе */}
         <div className="hidden md:block px-5 py-5 border-b border-white/10">
           <p className="text-[10px] tracking-[0.2em] text-white/40 uppercase mb-1">Mikhliev's</p>
           <h1 className="text-lg font-semibold tracking-tight">Примерить</h1>
         </div>
 
-        {/* Список очков */}
         <div className="
           flex md:flex-col
           flex-row
@@ -326,7 +389,6 @@ export default function TryOnPage() {
                 }
               `}
             >
-              {/* Превью очков */}
               <div className="bg-white w-full h-20 md:h-28 flex items-center justify-center overflow-hidden">
                 <img src={g.src} alt={g.name} className="w-full h-full object-contain p-2" />
               </div>
@@ -346,13 +408,10 @@ export default function TryOnPage() {
         </div>
       </div>
 
-      {/* ── Основная область ── */}
       <div className="order-1 md:order-2 flex-1 flex flex-col min-h-0">
 
-        {/* Статусбар */}
         <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-white/10 bg-[#0d0d0d]">
           <div className="flex items-center gap-2 md:gap-3">
-            {/* Название бренда — только мобильно */}
             <span className="md:hidden text-xs font-semibold tracking-tight mr-1">Mikhliev's</span>
             <div
               className="w-2 h-2 rounded-full transition-colors duration-300 flex-shrink-0"
@@ -374,7 +433,6 @@ export default function TryOnPage() {
           </div>
         </div>
 
-        {/* Область камеры / заглушки */}
         <div className="flex-1 relative bg-[#080808] overflow-hidden min-h-0">
           {!cameraActive ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 md:gap-6 text-center px-4">
